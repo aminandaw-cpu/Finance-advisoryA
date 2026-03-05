@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="fr">
 
 <head>
@@ -126,7 +126,7 @@
     /* HEADER : On passe en flex avec espacement automatique */
 
 
-    /* On enlève l'absolute du centre pour éviter l'empiètement */
+    /* On enlève l'absolute du centre pour éviter l'empiètement */uto
     .h-center {
       font-family: 'Playfair Display', serif;
       font-size: 18px;
@@ -141,6 +141,12 @@
       /* Annule le translateX */
       margin: 0 20px;
       /* Espace de sécurité */
+    }
+
+    .h-right {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
     }
 
     .header-spacer {
@@ -1657,7 +1663,12 @@ Accélération de la facturation intermédiaire</p>
         </div>
 
       </div>
+      </div>
     </div>
+
+
+    <!-- ══════════════════════════════════════════
+     ONGLET 2 — DELIVERY
 
 
     <!-- ══════════════════════════════════════════
@@ -1753,7 +1764,7 @@ Accélération de la facturation intermédiaire</p>
             <div class="kpi-lbl">Part Offshore </div>
             <div class="kpi-val">28 %</div>
             <div style="margin-top:10px;">
-              < <span class="badge b-warn clickable" style="cursor:pointer;" data-title="Part Offshore — Advisory"
+            <span class="badge b-warn clickable" style="cursor:pointer;" data-title="Part Offshore — Advisory"
                 data-message="<div class='modal-section'>
     <strong>Observation</strong>
     <p>La part offshore est sous-optimisée par rapport au levier de marge potentiel.</p>
