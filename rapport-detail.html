@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BAAMTU 360 – Rapport d’Analyse Stratégique</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#F5F5F5;
+      --choco:#4E342E;
+      --card:#ffffff;
+      --muted:#6b6b6b;
+      --accent:#2e7d32; /* green for positive */
+      --danger:#c62828; /* red for negative */
+      --beige:#FAF3EA;
+      --shadow: 0 6px 18px rgba(78,52,46,0.08);
+      --radius:10px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:var(--bg);
+      color:#222;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+    /* Header */
+    .topbar{
+      background:var(--choco);
+      color:#fff;
+      padding:18px 24px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+    }
+    .topbar .left{display:flex;align-items:center;gap:16px}
+    .logo{width:44px;height:44px;background:#fff;border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--choco);font-weight:700}
+    .title{font-size:16px;font-weight:600}
+    .subtitle{font-size:13px;color:rgba(255,255,255,0.9)}
+    .top-actions{display:flex;gap:10px;align-items:center}
+    /* Buttons */
+    .btn{background:transparent;border:1px solid rgba(255,255,255,0.12);color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer;display:inline-flex;gap:8px;align-items:center;font-weight:600}
+    .btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.12)}
+    .btn--pdf{background:transparent;border-color:rgba(255,255,255,0.14)}
+    .btn--excel{background:#fff;color:var(--choco)}
+    .back-link{background:transparent;color:#fff;border:none;padding:8px 10px;border-radius:8px;margin-right:6px;text-decoration:none;font-weight:600}
+
+    /* Layout */
+    .container{max-width:1200px;margin:24px auto;padding:0 18px}
+    .grid-2{display:grid;grid-template-columns:1fr 380px;gap:18px}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+    h2{margin:0 0 8px 0}
+
+    /* Résumé exécutif */
+    .kpi-wrap{display:flex;gap:18px;align-items:center}
+    .kpi-main{font-size:48px;font-weight:700;color:var(--choco)}
+    .kpi-meta{display:flex;flex-direction:column;gap:6px}
+    .meta-row{display:flex;gap:12px;align-items:center}
+    .chip{background:#f2f2f2;padding:6px 8px;border-radius:8px;font-weight:600}
+
+    /* Charts */
+    .charts{display:grid;grid-template-columns:1fr 340px;gap:18px}
+    .charts .small-cards{display:flex;flex-direction:column;gap:12px}
+
+    /* Table */
+    .table-wrap{overflow:auto}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px 12px;text-align:left;border-bottom:1px solid #eee}
+    th{background:var(--card);position:sticky;top:0;font-weight:700}
+    tbody tr:nth-child(even){background:#fbfbfb}
+
+    /* Impact */
+    .impact-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+
+    /* Recommandations */
+    .rec{background:var(--beige);padding:16px;border-radius:8px}
+    .rec ul{padding-left:18px;margin:8px 0}
+
+    /* Responsive */
+    @media (max-width:980px){
+      .grid-2{grid-template-columns:1fr}
+      .charts{grid-template-columns:1fr}
+    }
+    @media (max-width:480px){
+      .kpi-main{font-size:34px}
+      .topbar{padding:12px}
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER / NAVIGATION -->
+  <header class="topbar">
+    <div class="left">
+      <a class="back-link" href="index.html">← Retour au Dashboard</a>
+      <div class="logo" aria-hidden>BA</div>
+      <div>
+        <div class="title">BAAMTU 360 – Rapport d’Analyse Stratégique</div>
+        <div class="subtitle" id="kpi-name">KPI: Churn Clients</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="btn btn--pdf" title="Télécharger PDF">🔴 Télécharger PDF</button>
+      <button class="btn btn--excel" title="Exporter Excel">🟢 Exporter Excel</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- GRID PRINCIPALE: résumé à gauche, sommaire à droite -->
+    <section class="grid-2">
+      <!-- Colonne principale -->
+      <div>
+        <!-- SECTION 1: RÉSUMÉ EXÉCUTIF -->
+        <section class="card" aria-labelledby="resume-title">
+          <h2 id="resume-title">Résumé Exécutif</h2>
+          <div class="kpi-wrap">
+            <div>
+              <div class="kpi-main">4,5 %</div>
+              <div style="color:var(--muted);font-size:13px">Churn Clients (12 derniers mois)</div>
+            </div>
+            <div class="kpi-meta">
+              <div class="meta-row"><div class="chip">Objectif: 3,3 %</div><div class="chip">Écart: +1,2 pts</div><div class="chip" style="color:var(--danger)">Tendance: ↑</div></div>
+              <div style="color:var(--muted)">Commentaire: Le churn dépasse l’objectif de 1,2 points, principalement concentré sur les clients mid-market.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 2: ANALYSE VISUELLE -->
+        <section class="card" style="margin-top:18px" aria-labelledby="visuel-title">
+          <h2 id="visuel-title">Analyse Visuelle</h2>
+          <div class="charts">
+            <div>
+              <!-- Bar chart: évolution mensuelle -->
+              <canvas id="chart-monthly" style="width:100%;height:260px"></canvas>
+            </div>
+            <div class="small-cards">
+              <div class="card" style="padding:12px">
+                <div style="font-weight:700;margin-bottom:8px">Répartition des causes</div>
+                <canvas id="chart-pie" style="width:100%;height:140px"></canvas>
+              </div>
+              <div class="card" style="padding:12px">
+                <div style="font-weight:700;margin-bottom:8px">Indice secondaire</div>
+                <canvas id="chart-line" style="width:100%;height:120px"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 3: TABLEAU DÉTAILLÉ -->
+        <section class="card" style="margin-top:18px" aria-labelledby="table-title">
+          <h2 id="table-title">Tableau Détail (Churn)</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Client</th>
+                  <th>Segment</th>
+                  <th>Date fin contrat</th>
+                  <th>CA perdu (€)</th>
+                  <th>Motif départ</th>
+                  <th>Responsable compte</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Acme Corp</td><td>Mid-Market</td><td>2025-11-30</td><td>72 000</td><td>Prix</td><td>Julie Martin</td></tr>
+                <tr><td>DataLink</td><td>Enterprise</td><td>2025-10-15</td><td>210 000</td><td>Résultat</td><td>Marc Dupont</td></tr>
+                <tr><td>NeoStart</td><td>PME</td><td>2025-09-01</td><td>18 500</td><td>Changement projet</td><td>Inès K.</td></tr>
+                <tr><td>Helix IT</td><td>Mid-Market</td><td>2025-08-20</td><td>45 300</td><td>Support</td><td>Laura B.</td></tr>
+                <tr><td>OxySolutions</td><td>PME</td><td>2025-07-10</td><td>9 800</td><td>Fusion</td><td>Paul R.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Colonne droite: synthèse rapide, impact et recommandations -->
+      <aside>
+        <section class="card" aria-labelledby="summary-title">
+          <h2 id="summary-title">Synthèse Rapide</h2>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:8px">KPI sélectionné</div>
+          <div style="display:flex;gap:8px;align-items:center"><div style="font-weight:700">Churn Clients</div><div style="color:var(--muted);font-size:13px">(12 mois)</div></div>
+        </section>
+
+        <!-- SECTION 4: IMPACT FINANCIER -->
+        <section class="card" style="margin-top:18px" aria-labelledby="impact-title">
+          <h2 id="impact-title">Impact Financier</h2>
+          <div class="impact-grid">
+            <div class="card" style="padding:12px">
+              <div style="font-size:20px;font-weight:700">€345 400</div>
+              <div style="color:var(--muted);font-size:13px">Impact total estimé</div>
+            </div>
+            <div class="card" style="padding:12px">
+              <div style="font-size:20px;font-weight:700">-1,2 pts</div>
+              <div style="color:var(--muted);font-size:13px">Impact EBITDA (pp)</div>
+            </div>
+            <div class="card" style="padding:12px">
+              <div style="font-size:20px;font-weight:700">€120 000</div>
+              <div style="color:var(--muted);font-size:13px">Impact backlog</div>
+            </div>
+            <div class="card" style="padding:12px">
+              <div style="font-size:14px;color:var(--muted)">Projection:</div>
+              <div style="font-weight:700;margin-top:6px">Si tendance ↑ : perte cumulée 12 mois +8%</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 5: RECOMMANDATIONS MANAGEMENT -->
+        <section class="card" style="margin-top:18px" aria-labelledby="rec-title">
+          <h2 id="rec-title">Actions Stratégiques Recommandées</h2>
+          <div class="rec">
+            <ul>
+              <li>Lancer un plan de rétention ciblé sur clients mid-market à fort CA.</li>
+              <li>Revoir la politique tarifaire pour les PME à risque.</li>
+              <li>Renforcer le suivi post-projet et les SLAs critiques.</li>
+              <li>Allouer ressources CSM pour comptes à haut churn.</li>
+              <li>Mettre en place tableau de bord d'alerte mensuelle.</li>
+            </ul>
+          </div>
+        </section>
+      </aside>
+    </section>
+  </main>
+
+  <!-- Chart.js CDN + Script pour données fictives -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Données fictives: évolution mensuelle (bar chart)
+    const monthlyCtx = document.getElementById('chart-monthly').getContext('2d');
+    new Chart(monthlyCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc','Jan','Fév'],
+        datasets: [{
+          label: 'Taux de churn (%)',
+          data: [3.1,3.4,3.2,3.8,4.0,4.3,4.5,4.1,4.6,4.7,4.8,4.5],
+          backgroundColor: '#4E342E'
+        }]
+      },
+      options: {responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}
+    });
+
+    // Pie chart: répartition des causes
+    const pieCtx = document.getElementById('chart-pie').getContext('2d');
+    new Chart(pieCtx,{
+      type:'pie',
+      data:{labels:['Prix','Support','Résultat','Changement projet','Autres'],datasets:[{data:[28,22,18,14,18],backgroundColor:['#c94b4b','#f6b042','#4e342e','#7fb77e','#9aa5b1']} ]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}
+    });
+
+    // Line chart: KPI secondaire (ex: NPS ou satisfaction)
+    const lineCtx = document.getElementById('chart-line').getContext('2d');
+    new Chart(lineCtx,{type:'line',data:{labels:['T-6','T-5','T-4','T-3','T-2','T-1','T'],datasets:[{label:'CSAT',data:[78,76,75,74,72,70,68],borderColor:'#2e7d32',backgroundColor:'rgba(46,125,50,0.08)',tension:0.3,fill:true} ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:false}}}});
+  </script>
+</body>
+</html>

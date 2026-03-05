@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BAAMTU — Rapport Turnover Talents IT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --baamtu-brown:    #6B4423;
+      --baamtu-dark:     #3D2816;
+      --baamtu-gold:     #D4A65D;
+      --bg:              #FAFAF8;
+      --white:           #FFFFFF;
+      --surface:         #F5F2ED;
+      --border:          #E5DDD2;
+      --border2:         #D4C8BA;
+      --text:            #2D2416;
+      --text-2:          #5A4A35;
+      --text-3:          #9B8B75;
+      --red:             #C8442F;
+      --red-lt:          #FFE5E0;
+      --amber:           #E59500;
+      --amber-lt:        #FFF4DC;
+      --shadow:          0 2px 12px rgba(107,68,35,.08);
+      --shadow-md:       0 4px 24px rgba(107,68,35,.14);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    .header {
+      background: linear-gradient(135deg, #2a1a0d 0%, var(--baamtu-dark) 40%, var(--baamtu-brown) 100%);
+      height: 82px; padding: 0 36px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 200;
+      box-shadow: 0 4px 20px rgba(61,40,22,.28);
+    }
+    .h-left { display: flex; align-items: center; gap: 14px; }
+    .logo-img { height: 50px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,.2)); }
+    .brand-info { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+    .brand-name { font-size: 22px; font-weight: 800; color: #FFF; letter-spacing: .08em; text-transform: uppercase; font-family: 'Playfair Display', serif; line-height: 1; margin: 0; }
+    .brand-sub { font-size: 12px; color: rgba(255,255,255,.80); letter-spacing: .04em; font-weight: 500; margin: 0; }
+    .h-center { font-family: 'Playfair Display',serif; font-size: 18px; color: rgba(255,255,255,.85); font-weight: 600; }
+    .h-right { display: flex; align-items: center; gap: 12px; }
+    .export-dropdown { position: relative; display: inline-block; }
+    .btn-export { background: #C8442F; border: none; color: #fff; padding: 8px 18px; border-radius: 8px; cursor: pointer; display: inline-flex; gap: 8px; align-items: center; font-weight: 600; font-family: 'Montserrat', sans-serif; font-size: 13px; transition: all .2s; }
+    .btn-export:hover { background: #a83820; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(200,68,47,.28); }
+    .dropdown-menu { display: none; position: absolute; background: #fff; border: 1px solid var(--border); border-radius: 8px; box-shadow: var(--shadow-md); min-width: 180px; z-index: 1000; top: 100%; right: 0; margin-top: 8px; overflow: hidden; }
+    .dropdown-menu.show { display: block; }
+    .dropdown-item { display: block; padding: 10px 16px; color: var(--text-2); text-decoration: none; font-size: 13px; font-weight: 600; font-family: 'Montserrat', sans-serif; cursor: pointer; transition: all .18s; border-bottom: 1px solid var(--border); }
+    .dropdown-item:last-child { border-bottom: none; }
+    .dropdown-item:hover { background: var(--surface); color: var(--text); }
+    .btn-back { background: var(--baamtu-gold); border: 1px solid var(--baamtu-gold); color: var(--baamtu-dark); padding: 8px 18px; border-radius: 8px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 13px; transition: all .2s; text-decoration: none; display: inline-flex; gap: 8px; align-items: center; }
+    .btn-back:hover { background: #C0933F; border-color: #C0933F; color: var(--baamtu-dark); box-shadow: 0 4px 12px rgba(192,147,63,.3); }
+    .page { max-width: 1320px; margin: 0 auto; padding: 32px 36px 60px; }
+    .section-title {
+  font-family: 'Playfair Display', serif; 
+  font-size: 25px;
+  font-weight: 500; 
+  color: var(--baamtu-dark);
+  letter-spacing: -0.02em;
+  border-left: 5px solid var(--baamtu-gold);
+  padding-left: 15px;
+}
+    .filters{display:flex;gap:10px;align-items:center}
+    .table-card { background: var(--white); border-radius: 14px; padding: 22px 26px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+    table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+    thead th { text-align: left; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--text-3); padding: 0 12px 12px; border-bottom: 2px solid var(--border2); }
+    thead th:not(:first-child) { text-align: left; }
+    tbody tr:hover td { background: var(--surface); }
+    tbody td { padding: 12px; font-size: 13px; border-bottom: 1px solid var(--border); vertical-align: middle; font-family: 'Montserrat', sans-serif; }
+    tbody td:not(:first-child) { text-align: left; }
+    tbody td:first-child { color: var(--text-2); font-weight: 600; }
+    .badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 11px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .badge-critical { background: var(--red-lt); color: var(--red); }
+    .badge-high { background: var(--amber-lt); color: var(--amber); }
+    .badge-low { background: #D8F3DC; color: #2D7A4F; }
+    .section-title {
+      font-family: 'Playfair Display', serif; 
+      font-size: 25px;
+      font-weight: 500; 
+      color: var(--baamtu-dark);
+      letter-spacing: -0.02em;
+      border-left: 5px solid var(--baamtu-gold);
+      padding-left: 15px;
+    }
+    .filters { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    select, input[type=date] { padding: 10px 14px; border-radius: 10px; border: 2px solid var(--border); background: var(--white); font-size: 14px; font-family: 'Montserrat', sans-serif; font-weight: 500; color: var(--text-2); transition: all 0.3s ease; cursor: pointer; box-shadow: 0 1px 3px rgba(107,68,35,.05); }
+    select:hover, input[type=date]:hover { border-color: var(--baamtu-gold); background-color: #FFFBF7; box-shadow: 0 2px 8px rgba(107,68,35,.1); }
+    select:focus, input[type=date]:focus { outline: none; border-color: var(--baamtu-gold); box-shadow: 0 0 0 3px rgba(212,166,93,.15); }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="h-left">
+      <img src="logo.png" alt="BAAMTU Logo" class="logo-img">
+      <div class="brand-info">
+        <div class="brand-name">BAAMTU</div>
+        <div class="brand-sub">Finance Advisory Services</div>
+      </div>
+    </div>
+    <div class="h-center">PILOTAGE 360</div>
+    <div class="h-right">
+    </div>
+  </header>
+
+  <div class="page">
+    <br>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+      <div class="section-title">Evolution du CA — Analyse par Filiale</div>
+      <div style="display: flex; gap: 12px;">
+        <div class="export-dropdown">
+          <button class="btn-export" onclick="toggleExport(this)">📊 Exporter</button>
+          <div class="dropdown-menu" id="exportMenu">
+            <a class="dropdown-item" onclick="exportPDF()">🔴 Télécharger en PDF</a>
+            <a class="dropdown-item" onclick="exportExcel()">🟢 Exporter en Excel</a>
+          </div>
+        </div>
+        <a href="#" class="btn-back" onclick="goBackToTab(event)">← Retourner</a>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+        <div class="filters">
+          <select id="filterPosteRpt"><option value="">Filtrer par poste</option><option value="Lead Architecte">Lead Architecte</option><option value="Data Science Manager">Data Science Manager</option><option value="DevOps Principal">DevOps Principal</option><option value="Backend Developer">Backend Developer</option><option value="QA Engineer">QA Engineer</option><option value="Consultant Principal">Consultant Principal</option><option value="Solutions Architect">Solutions Architect</option><option value="ML Engineer">ML Engineer</option></select>
+        </div>
+        <button id="resetFiltersTurn" style="padding:10px 18px;border-radius:10px;background:var(--surface);border:2px solid var(--baamtu-gold);color:var(--baamtu-dark);cursor:pointer;font-weight:600;font-size:14px;font-family:'Montserrat',sans-serif;transition:all 0.3s ease;box-shadow:0 1px 3px rgba(107,68,35,.05)">Réinitialiser</button>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Poste Critique</th>
+            <th>Expert</th>
+            <th>Projet Impacté</th>
+            <th>Raison du Départ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Lead Architecte (SONATEL)</td>
+            <td>Senior (8 ans exp.)</td>
+            <td>SONATEL Phase 2</td>
+            <td><span class="badge badge-critical">Opportunité Startup</span></td>
+          </tr>
+          <tr>
+            <td>Data Science Manager (DGID)</td>
+            <td>Senior (6 ans exp.)</td>
+            <td>DGID Modernisation</td>
+            <td><span class="badge badge-critical">Meilleure Rémunération</span></td>
+          </tr>
+          <tr>
+            <td>DevOps Principal (ECOBANK)</td>
+            <td>Mid-Level (4 ans exp.)</td>
+            <td>ECOBANK Digital</td>
+            <td><span class="badge badge-high">Changement de Secteur</span></td>
+          </tr>
+          <tr>
+            <td>Backend Developer (ORANGE)</td>
+            <td>Junior (2 ans exp.)</td>
+            <td>ORANGE Transformation</td>
+            <td><span class="badge badge-low">Formation Poursuivie</span></td>
+          </tr>
+          <tr>
+            <td>QA Engineer (Support)</td>
+            <td>Junior (1 an exp.)</td>
+            <td>Support Clients</td>
+            <td><span class="badge badge-low">Raison Personnelle</span></td>
+          </tr>
+          <tr>
+            <td>Consultant Principal (MINF)</td>
+            <td>Expert (10 ans exp.)</td>
+            <td>Ministère Finances</td>
+            <td><span class="badge badge-critical">Retraite Anticipée</span></td>
+          </tr>
+          <tr>
+            <td>Solutions Architect (AIR)</td>
+            <td>Senior (7 ans exp.)</td>
+            <td>Air Sénégal Infra</td>
+            <td><span class="badge badge-critical">Poste Concurrent</span></td>
+          </tr>
+          <tr>
+            <td>ML Engineer (SENELEC)</td>
+            <td>Mid-Level (3 ans exp.)</td>
+            <td>SENELEC Innovation</td>
+            <td><span class="badge badge-high">Recherche Académique</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <script>
+    function initTab() {
+      const tab = sessionStorage.getItem('activeTab') || 'finance';
+      sessionStorage.setItem('activeTab', tab);
+    }
+
+    function goBackToTab(e) {
+      e.preventDefault();
+      const tab = sessionStorage.getItem('activeTab') || 'finance';
+      window.location.href = 'index.html?tab=' + tab;
+    }
+
+    function toggleExport(btn) {
+      const menu = btn.nextElementSibling;
+      menu.classList.toggle('show');
+      document.addEventListener('click', function closeMenu(e) {
+        if (!btn.parentElement.contains(e.target)) {
+          menu.classList.remove('show');
+          document.removeEventListener('click', closeMenu);
+        }
+      });
+    }
+
+    function exportPDF() {
+      alert('Téléchargement PDF en cours...\nFichier: Turnover_Talents_' + new Date().toLocaleDateString('fr-FR') + '.pdf');
+      document.getElementById('exportMenu').classList.remove('show');
+    }
+
+    function exportExcel() {
+      alert('Export Excel en cours...\nFichier: Turnover_Talents_' + new Date().toLocaleDateString('fr-FR') + '.xlsx');
+      document.getElementById('exportMenu').classList.remove('show');
+    }
+
+    // Filters: poste
+    function initFiltersTurnover(){
+      const sel = document.getElementById('filterPosteRpt');
+      const resetBtn = document.getElementById('resetFiltersTurn');
+      const tbody = document.querySelector('.table-card tbody');
+      function apply(){
+        const v = sel.value;
+        Array.from(tbody.rows).forEach(row=>{
+          const poste = row.cells[0].innerText || '';
+          const show = !v || poste.includes(v);
+          row.style.display = show ? '' : 'none';
+        });
+      }
+      sel.addEventListener('change', apply);
+      resetBtn.addEventListener('click', ()=>{ sel.value=''; apply(); });
+      const params = new URLSearchParams(window.location.search); if (params.has('poste')) sel.value = params.get('poste'); apply();
+    }
+
+    document.addEventListener('DOMContentLoaded', ()=>{ initTab(); initFiltersTurnover(); });
+  </script>
+</body>
+</html>

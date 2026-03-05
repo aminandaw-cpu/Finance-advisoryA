@@ -1,0 +1,2745 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BAAMTU — Dashboard CEO / CFO</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+    :root {
+      /* Charte Baamtu — tons terre/chauds */
+      --baamtu-brown: #6B4423;
+      --baamtu-orange: #C8742F;
+      --baamtu-gold: #D4A65D;
+      --baamtu-cream: #F5EFE7;
+      --baamtu-dark: #3D2816;
+
+      --bg: #FAFAF8;
+      --white: #FFFFFF;
+      --surface: #F5F2ED;
+      --border: #E5DDD2;
+      --border2: #D4C8BA;
+
+      /* Accent colors adaptés */
+      --brown: #6B4423;
+      --orange: #C8742F;
+      --gold: #D4A65D;
+      --green: #2D7A4F;
+      --green-lt: #D8F3DC;
+      --amber: #E59500;
+      --amber-lt: #FFF4DC;
+      --red: #C8442F;
+      --red-lt: #FFE5E0;
+      --blue: #2B5F8A;
+      --blue-lt: #E0EDF7;
+      --cyan: #0891B2;
+
+      --text: #2D2416;
+      --text-2: #5A4A35;
+      --text-3: #9B8B75;
+
+      --shadow: 0 2px 12px rgba(107, 68, 35, .08);
+      --shadow-md: 0 4px 24px rgba(107, 68, 35, .14);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    svg text {
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    /* ══ HEADER ══════════════════════════════════ */
+    .header {
+      background: linear-gradient(135deg, #2a1a0d 0%, var(--baamtu-dark) 40%, var(--baamtu-brown) 100%);
+      min-height: 60px;
+      /* Réduit de 70px à 60px */
+      padding: 5px 24px;
+      /* Padding plus serré */
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      /* Logo à gauche, Titre centre, Filtres droite */
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      box-shadow: 0 4px 20px rgba(61, 40, 22, .28);
+    }
+
+    .h-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+
+
+    .logo-img {
+      height: 40px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .2));
+    }
+
+    .brand-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+    }
+
+    .brand-name {
+      font-size: 18px;
+      font-weight: 800;
+      color: #FFF;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-family: 'Playfair Display', serif;
+      line-height: 1;
+      margin: 0;
+    }
+
+    .brand-sub {
+      font-size: 10px;
+      color: rgba(255, 255, 255, .80);
+      letter-spacing: .04em;
+      font-weight: 500;
+      margin: 0;
+    }
+
+
+    /* HEADER : On passe en flex avec espacement automatique */
+
+
+    /* On enlève l'absolute du centre pour éviter l'empiètement */
+    .h-center {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      /* Réduit de 22px */
+      color: rgba(255, 255, 255, .95);
+      font-weight: 700;
+      white-space: nowrap;
+      letter-spacing: .02em;
+      position: static;
+      /* Annule l'absolute */
+      transform: none;
+      /* Annule le translateX */
+      margin: 0 20px;
+      /* Espace de sécurité */
+    }
+
+    .header-spacer {
+      flex: 1;
+    }
+
+    /* Filtres déplacés sous le header, sur la même ligne que les tabs */
+    .header-filters {
+      display: none;
+    }
+
+    .filters-row {
+      background: linear-gradient(135deg, #2a1a0d 0%, var(--baamtu-dark) 40%, var(--baamtu-brown) 100%);
+      padding: 8px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, .1);
+    }
+
+    .period-badge {
+      background: rgba(255, 255, 255, .12);
+      border: 1px solid rgba(255, 255, 255, .2);
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 16px;
+      font-size: 10px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    /* FILTRES : Plus compacts et poussés à droite */
+    .filters {
+      display: flex;
+      gap: 6px;
+      /* Espace réduit au minimum */
+      align-items: center;
+      margin-left: auto;
+      /* Pousse tout le bloc vers la droite */
+    }
+
+    /* Style des boutons et selects pour les miniaturiser */
+    .filter-btn,
+    .filter-select {
+      padding: 4px 8px !important;
+      /* Force un padding réduit */
+      font-size: 10px !important;
+      /* Texte plus petit */
+      height: 28px;
+      /* Hauteur fixe compacte */
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .1);
+      border: 1px solid rgba(255, 255, 255, .2);
+      color: white;
+    }
+
+    /* Wrapper pour réduire la flèche ▼ */
+    .filter-select-wrapper::after {
+      right: 6px;
+      font-size: 7px;
+    }
+
+    /* On réduit la taille des icônes dans les boutons si besoin */
+    .filter-date-wrapper .filter-btn {
+      font-size: 10px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 2px;
+      align-items: center;
+      margin-left: auto;
+    }
+
+
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--baamtu-gold);
+      border-color: var(--baamtu-gold);
+      color: var(--baamtu-dark);
+    }
+
+    .filter-select-wrapper {
+      position: relative;
+      display: inline-block;
+      flex: 0 0 auto;
+    }
+
+    .filter-select-wrapper::after {
+      content: '▼';
+      position: absolute;
+      top: 50%;
+      right: 2px;
+      transform: translateY(-50%);
+      pointer-events: none;
+      font-size: 5px;
+      color: rgba(255, 255, 255, .65);
+    }
+
+
+    .filter-date-wrapper .filter-btn {
+      position: relative;
+      z-index: 1;
+      padding: 1px 3px;
+    }
+
+    .date-input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      opacity: 0;
+      z-index: 2;
+    }
+
+    .date-input::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+    }
+
+    /* ══ TABS ════════════════════════════════════ */
+    .tabs {
+      background: var(--white);
+      border-bottom: 2px solid var(--border);
+      padding: 0 36px;
+      display: flex;
+      gap: 0;
+      position: sticky;
+      top: 60px;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(107, 68, 35, .06);
+    }
+
+    .tab-btn {
+      padding: 16px 28px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-3);
+      cursor: pointer;
+      background: none;
+      border: none;
+      border-bottom: 4px solid transparent;
+      margin-bottom: -2px;
+      font-family: 'Montserrat', sans-serif;
+      letter-spacing: .02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-2);
+    }
+
+    .tab-btn.active {
+      color: var(--tab-color, var(--baamtu-orange));
+      border-bottom-color: var(--tab-color, var(--baamtu-orange));
+    }
+
+    /* ══ TAB PANELS ══════════════════════════════ */
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+      animation: fadeIn .25s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    /* ══ PAGE ═══════════════════════════════════ */
+    .page {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 32px 36px 60px;
+    }
+
+    .section-lbl {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .section-lbl::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border2);
+    }
+
+    /* ══ KPI CARDS ═══════════════════════════════ */
+    .kpi-row-6 {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-row-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-row-5 {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-row-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-row-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 20px 22px 18px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow .22s, transform .18s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 160px;
+    }
+
+    .kpi-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+    }
+
+    .kpi-ic {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-bottom: 13px;
+    }
+
+    .kpi-lbl {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-2);
+      margin-bottom: 7px;
+      line-height: 1.4;
+      letter-spacing: .01em;
+    }
+
+    .kpi-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+      letter-spacing: -.02em;
+    }
+
+    .kpi-val.sm {
+      font-size: 24px;
+    }
+
+    .kpi-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+    }
+
+    /* action button - text only */
+    .action-btn.green {
+      display: block;
+      width: 100%;
+      margin-top: 12px;
+      margin-left: -15px;
+      padding: 0;
+      font-size: 10px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-weight: 700;
+      transition: opacity .18s;
+      text-align: center;
+      white-space: nowrap;
+      color: var(--green);
+      margin-top: 20px
+    }
+
+    .action-btn.orange {
+      display: block;
+      width: 100%;
+      margin-top: 26px;
+      margin-left: -8px;
+      padding: 0;
+      font-size: 10px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-weight: 700;
+      transition: opacity .18s;
+      text-align: center;
+      white-space: nowrap;
+      color: var(--amber)
+    }
+
+    .action-btn:hover {
+      opacity: .7
+    }
+
+    /* modal */
+    #actionModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, .5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000
+    }
+
+    #actionModal .modal-content {
+      background: #fff;
+      border-radius: 14px;
+      max-width: 620px;
+      position: relative;
+      box-shadow: 0 12px 48px rgba(61, 40, 22, .24);
+      overflow: hidden
+    }
+
+    #actionModal .modal-header {
+      background: linear-gradient(135deg, #2a1a0d 0%, var(--baamtu-dark) 40%, var(--baamtu-brown) 100%);
+      padding: 24px 28px;
+      position: relative;
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    #actionModal .modal-header h3 {
+      color: #fff;
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      letter-spacing: .01em;
+      flex: 1
+    }
+
+    #actionModal .modal-logo {
+      height: 48px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .2))
+    }
+
+    #actionModal .modal-body {
+      padding: 32px;
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.7;
+      letter-spacing: .01em
+    }
+
+    #actionModal .modal-section {
+      margin-bottom: 20px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    #actionModal .modal-section:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none
+    }
+
+    #actionModal .modal-section strong {
+      display: block;
+      color: var(--baamtu-brown);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      text-align: left
+    }
+
+    #actionModal .modal-section p {
+      margin: 0;
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.8
+    }
+
+    #actionModal .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      cursor: pointer;
+      font-size: 28px;
+      color: #fff;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity .18s
+    }
+
+    #actionModal .modal-close:hover {
+      opacity: .7
+    }
+
+    /* ══ CHARTS ══════════════════════════════════ */
+    .charts-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .charts-3col {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .charts-21 {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .charts-12 {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .chart-card {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 22px 26px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .chart-hd {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+
+    .chart-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: .01em;
+    }
+
+    .chart-sub {
+      font-size: 11px;
+      color: var(--text-3);
+      margin-top: 4px;
+    }
+
+    .chart-tag {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 11px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      flex-shrink: 0;
+      margin-left: 10px;
+    }
+
+    .legend {
+      display: flex;
+      gap: 16px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .leg-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      color: var(--text-2);
+      font-weight: 500;
+    }
+
+    .leg-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .prog-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .prog-lbl {
+      font-size: 12px;
+      color: var(--text-2);
+      width: 150px;
+      flex-shrink: 0;
+      line-height: 1.3;
+      font-weight: 500;
+    }
+
+    .prog-track {
+      flex: 1;
+      background: var(--surface);
+      border-radius: 6px;
+      height: 11px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .prog-fill {
+      height: 100%;
+      border-radius: 6px;
+    }
+
+    .prog-val {
+      font-size: 13px;
+      font-weight: 700;
+      width: 50px;
+      text-align: right;
+      flex-shrink: 0;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ══ TABLE ═══════════════════════════════════ */
+    .table-card {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 22px 26px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+
+    thead th {
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      padding: 0 12px 12px;
+      border-bottom: 2px solid var(--border2);
+    }
+
+    thead th:not(:first-child) {
+      text-align: right;
+    }
+
+    tbody tr:hover td {
+      background: var(--surface);
+    }
+
+    tbody td {
+      padding: 12px;
+      font-size: 13px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    tbody td:not(:first-child) {
+      text-align: right;
+    }
+
+    .c-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .c-av {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 11px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* clickable badges should show pointer cursor */
+    .badge.clickable {
+      cursor: pointer;
+    }
+
+    .b-ok {
+      background: var(--green-lt);
+      color: var(--green);
+    }
+
+    .b-warn {
+      background: var(--amber-lt);
+      color: var(--amber);
+    }
+
+    .b-ko {
+      background: var(--red-lt);
+      color: var(--red);
+    }
+
+    .alert-banner {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 20px;
+      border-radius: 12px;
+      border-left: 5px solid;
+      margin-bottom: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .alert-red {
+      background: var(--red-lt);
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .alert-amber {
+      background: var(--amber-lt);
+      border-color: var(--amber);
+      color: var(--amber);
+    }
+
+    .alert-green {
+      background: var(--green-lt);
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    .donut-wrap {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding-top: 6px;
+    }
+
+    .donut-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex: 1;
+    }
+
+    .donut-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .donut-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .donut-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    /* ══ DROPDOWNS ═══════════════════════════════ */
+    .filter-select-wrapper {
+      position: relative;
+      display: inline-block;
+      flex: 0 0 auto;
+    }
+
+    .filter-select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      border: 1px solid rgba(255, 255, 255, .2);
+      background: rgba(255, 255, 255, .08);
+      color: rgba(255, 255, 255, .65);
+      padding: 6px 13px 6px 13px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .18s;
+      letter-spacing: .02em;
+      padding-right: 26px;
+    }
+
+    .filter-select:hover {
+      background: var(--baamtu-gold);
+      border-color: var(--baamtu-gold);
+      color: var(--baamtu-dark);
+    }
+
+    .filter-select:focus {
+      outline: none;
+      background: var(--baamtu-gold);
+      border-color: var(--baamtu-gold);
+      color: var(--baamtu-dark);
+    }
+
+    .filter-select-wrapper::after {
+      content: '▼';
+      position: absolute;
+      top: 50%;
+      right: 8px;
+      transform: translateY(-50%);
+      pointer-events: none;
+      font-size: 9px;
+      color: rgba(255, 255, 255, .65);
+    }
+
+    .filter-select:hover~ ::after,
+    .filter-select:focus~ ::after {
+      color: var(--baamtu-dark);
+    }
+
+    footer {
+      background: var(--white);
+      border-top: 2px solid var(--border);
+      padding: 16px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-3);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ══ HEADER ════════════════════════════════ -->
+  <header class="header">
+    <div class="h-left">
+      <img src="logo.png" alt="BAAMTU Logo" class="logo-img">
+      <div class="brand-info">
+        <div class="brand-name">BAAMTU</div>
+        <div class="brand-sub">Finance Advisory Services</div>
+      </div>
+    </div>
+    <div class="h-center">BAAMTU 360</div>
+    <div class="h-right">
+      <div class="filters">
+        <div class="filter-date-wrapper">
+          <button class="filter-btn" id="dateFilterBtn" style="cursor:pointer;">📅 Sélectionner Date</button>
+          <input type="date" id="dateFilterInput" class="date-input" style="display:none;">
+        </div>
+        <button class="filter-btn active" id="filterTous">Tous</button>
+        <div class="filter-select-wrapper">
+          <select class="filter-select" id="filterFiliale">
+            <option value="">Par Filiale</option>
+            <option value="datamation">BAAMTU Datamation</option>
+            <option value="systems">BAAMTU SYSTEMS</option>
+            <option value="consulting">BAAMTU Consulting</option>
+            <option value="cotedivoire">BAAMTU Côte d’Ivoire</option>
+            <option value="france">BAAMTU France</option>
+          </select>
+        </div>
+        <div class="filter-select-wrapper">
+          <select class="filter-select" id="filterClient">
+            <option value="">Par Client</option>
+            <option value="ecobank">ECOBANK Sénégal</option>
+            <option value="sonatel">SONATEL</option>
+            <option value="dgid">DGID</option>
+            <option value="bhs">ECOBANK Core Upgrade</option>
+            <option value="orange">ORANGE Sénégal</option>
+          </select>
+        </div>
+        <div class="filter-select-wrapper">
+          <select class="filter-select" id="filterProjet">
+            <option value="">Par Projet</option>
+            <option value="sonatel-p1">SONATEL Phase 1</option>
+            <option value="sonatel-p2">SONATEL Phase 2</option>
+            <option value="ecobank-core">ECOBANK Core Upgrade</option>
+            <option value="dgid-digi">DGID Digitalisation</option>
+            <option value="orange-data">ORANGE Data Integration</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ TABS ══════════════════════════════════ -->
+  <div class="tabs">
+<button class="tab-btn" style="--tab-color:#C8742F;" onclick="switchTab('vue-globale',this)">
+      Vue globale
+    </button>
+    <button class="tab-btn active" style="--tab-color:#C8742F;" onclick="switchTab('finance',this)">
+      Finance
+    </button>
+    <button class="tab-btn" style="--tab-color:#D4A65D;" onclick="switchTab('delivery',this)">
+      Projets
+    </button>
+    <button class="tab-btn" style="--tab-color:#2D7A4F;" onclick="switchTab('clients',this)">
+      Clients
+    </button>
+    <button class="tab-btn" style="--tab-color:#6B4423;" onclick="switchTab('talents',this)">
+      RH
+    </button>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+     ONGLET 0 — VUE GLOBALE
+══════════════════════════════════════════ -->
+  <div class="tab-panel" id="tab-vue-globale">
+    <div class="page">
+
+      <div class="section-lbl">Vue Globale de la Performance Financière — Suivi Mensuel</div>
+
+      <div class="kpi-row-6">
+
+        <!-- 1️⃣ CHIFFRE D'AFFAIRES -->
+        <div class="kpi-card">
+          <div class="kpi-ic" style="background:#FFF4DC;">💶</div>
+          <div class="kpi-lbl">Chiffre d'Affaires</div>
+          <div class="kpi-val">786 M</div>
+          <div style="margin-top:8px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:10px;color:var(--text-3);">Objectif: 850M</span>
+              <span style="font-size:10px;font-weight:700;color:var(--amber);">92%</span>
+            </div>
+            <div class="prog-track" style="height:6px;">
+              <div class="prog-fill" style="width:92%;background:var(--amber);"></div>
+            </div>
+          </div>
+          <div class="kpi-bar" style="background:var(--baamtu-orange);"></div>
+        </div>
+
+
+        <!-- 2️⃣ CA YTD -->
+        <div class="kpi-card">
+          <div class="kpi-ic" style="background:#E0EDF7;">🎯</div>
+          <div class="kpi-lbl">CA YTD vs Objectif</div>
+          <div class="kpi-val sm">93 %</div>
+          <div style="margin-top:8px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:10px;color:var(--text-3);">Objectif: 100%</span>
+              <span style="font-size:10px;font-weight:700;color:var(--amber);">-7%</span>
+            </div>
+            <div class="prog-track" style="height:6px;">
+              <div class="prog-fill" style="width:93%;background:linear-gradient(90deg,var(--baamtu-orange),var(--amber));"></div>
+            </div>
+          </div>
+          <div class="kpi-bar" style="background:var(--cyan);"></div>
+        </div>
+
+
+        <!-- 3️⃣ MARGE BRUTE -->
+        <div class="kpi-card">
+          <div class="kpi-ic" style="background:var(--green-lt);">📊</div>
+          <div class="kpi-lbl">Marge Brute Globale</div>
+          <div class="kpi-val">354 M</div>
+          <div style="margin-top:8px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:10px;color:var(--text-3);">Objectif: 45%</span>
+              <span style="font-size:10px;font-weight:700;color:var(--green);">45%</span>
+            </div>
+            <div class="prog-track" style="height:6px;">
+              <div class="prog-fill" style="width:100%;background:var(--green);"></div>
+            </div>
+          </div>
+          <div class="kpi-bar" style="background:var(--green);"></div>
+        </div>
+
+
+        <!-- 4️⃣ EBITDA -->
+        <div class="kpi-card">
+          <div class="kpi-ic" style="background:#E0EDF7;">🏦</div>
+          <div class="kpi-lbl">EBITDA</div>
+          <div class="kpi-val">328 M</div>
+          <div style="margin-top:8px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:10px;color:var(--text-3);">Objectif: 295M</span>
+              <span style="font-size:10px;font-weight:700;color:var(--green);">+11%</span>
+            </div>
+            <div class="prog-track" style="height:6px;">
+              <div class="prog-fill" style="width:100%;background:var(--green);"></div>
+            </div>
+          </div>
+          <div class="kpi-bar" style="background:var(--blue);"></div>
+        </div>
+
+
+        <!-- 5️⃣ TRÉSORERIE -->
+        <div class="kpi-card">
+          <div class="kpi-ic" style="background:#FFF4DC;">💸</div>
+          <div class="kpi-lbl">Trésorerie (Cash Conv.)</div>
+          <div class="kpi-val sm">78 %</div>
+          <div style="margin-top:8px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:10px;color:var(--text-3);">Objectif: 85%</span>
+              <span style="font-size:10px;font-weight:700;color:var(--amber);">-7%</span>
+            </div>
+            <div class="prog-track" style="height:6px;">
+              <div class="prog-fill" style="width:78%;background:var(--amber);"></div>
+            </div>
+          </div>
+          <div class="kpi-bar" style="background:var(--amber);"></div>
+        </div>
+
+
+        <!-- 6️⃣ CARNET -->
+        <div class="kpi-card">
+          <div class="kpi-ic" style="background:var(--green-lt);">📅</div>
+          <div class="kpi-lbl">Carnet de Commandes</div>
+          <div class="kpi-val sm">7,4 m</div>
+          <div style="margin-top:8px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:10px;color:var(--text-3);">Objectif: 6 mois</span>
+              <span style="font-size:10px;font-weight:700;color:var(--green);">+1,4m</span>
+            </div>
+            <div class="prog-track" style="height:6px;">
+              <div class="prog-fill" style="width:100%;background:var(--green);"></div>
+            </div>
+          </div>
+          <div class="kpi-bar" style="background:var(--green);"></div>
+        </div>
+
+
+      </div>
+      <div class="charts-2col">
+
+        <div class="chart-card">
+          <div class="chart-hd">
+            <div>
+              <div class="chart-title">CA vs Objectif — Évolution mensuelle (FCFA)</div>
+              <div class="chart-sub">En millions FCFA · Oct 2025 → Mars 2026</div>
+            </div>
+          </div>
+          <svg width="100%" height="140" viewBox="0 0 560 190" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <linearGradient id="gCAvg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#C8742F" stop-opacity=".16" />
+                <stop offset="100%" stop-color="#C8742F" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+            <line x1="48" y1="18" x2="548" y2="18" stroke="#E5DDD2" stroke-width="1" />
+            <line x1="48" y1="60" x2="548" y2="60" stroke="#E5DDD2" stroke-width="1" />
+            <line x1="48" y1="102" x2="548" y2="102" stroke="#E5DDD2" stroke-width="1" />
+            <line x1="48" y1="144" x2="548" y2="144" stroke="#E5DDD2" stroke-width="1" />
+            <text x="42" y="21" text-anchor="end" font-size="10" fill="#9B8B75">800M</text>
+            <text x="42" y="63" text-anchor="end" font-size="10" fill="#9B8B75">600M</text>
+            <text x="42" y="105" text-anchor="end" font-size="10" fill="#9B8B75">400M</text>
+            <text x="42" y="147" text-anchor="end" font-size="10" fill="#9B8B75">200M</text>
+            <polyline points="48,126 148,112 248,98 348,86 448,74 548,66" fill="none" stroke="#C8C0B5" stroke-width="2"
+              stroke-dasharray="6 4" />
+            <polygon points="48,142 148,118 248,104 348,82 448,64 548,46 548,168 48,168" fill="url(#gCAvg)" />
+            <polyline points="48,142 148,118 248,104 348,82 448,64 548,46" fill="none" stroke="#C8742F" stroke-width="3"
+              stroke-linejoin="round" stroke-linecap="round" />
+            <circle cx="48" cy="142" r="4" fill="#C8742F" />
+            <circle cx="148" cy="118" r="4" fill="#C8742F" />
+            <circle cx="248" cy="104" r="4" fill="#C8742F" />
+            <circle cx="348" cy="82" r="4" fill="#C8742F" />
+            <circle cx="448" cy="64" r="4" fill="#C8742F" />
+            <circle cx="548" cy="46" r="6" fill="#C8742F" stroke="#fff" stroke-width="2.5" />
+            <text x="548" y="36" text-anchor="middle" font-size="12" fill="#C8742F" font-weight="700">786M</text>
+            <text x="48" y="182" text-anchor="middle" font-size="10" fill="#9B8B75">Oct</text>
+            <text x="148" y="182" text-anchor="middle" font-size="10" fill="#9B8B75">Nov</text>
+            <text x="248" y="182" text-anchor="middle" font-size="10" fill="#9B8B75">Déc</text>
+            <text x="348" y="182" text-anchor="middle" font-size="10" fill="#9B8B75">Jan</text>
+            <text x="448" y="182" text-anchor="middle" font-size="10" fill="#9B8B75">Fév</text>
+            <text x="548" y="182" text-anchor="middle" font-size="11" fill="#C8742F" font-weight="700">Mars</text>
+          </svg>
+          <div class="legend">
+            <div class="leg-item">
+              <div class="leg-dot" style="background:#C8742F"></div>CA Réel (FCFA)
+            </div>
+            <div class="leg-item">
+              <div class="leg-dot" style="background:#C8C0B5"></div>Objectif
+            </div>
+          </div>
+        </div>
+
+        <!-- Waterfall Chart: CA → Marge Réelle -->
+        <div class="chart-card">
+          <div class="chart-hd">
+            <div>
+              <div class="chart-title">CA → Marge Réelle (Waterfall)</div>
+              <div class="chart-sub">En millions FCFA · Mars 2026</div>
+            </div>
+          </div>
+          <svg width="100%" height="180" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid meet">
+            <!-- Y-axis: -1000 to 3000 -->
+            <line x1="50" y1="20" x2="380" y2="20" stroke="#E5DDD2" stroke-width="1" />
+            <line x1="50" y1="60" x2="380" y2="60" stroke="#E5DDD2" stroke-width="1" />
+            <line x1="50" y1="100" x2="380" y2="100" stroke="#E5DDD2" stroke-width="1" />
+            <line x1="50" y1="140" x2="380" y2="140" stroke="#E5DDD2" stroke-width="1" />
+            <line x1="50" y1="180" x2="380" y2="180" stroke="#E5DDD2" stroke-width="1" />
+            
+            <text x="45" y="24" text-anchor="end" font-size="9" fill="#9B8B75">3000</text>
+            <text x="45" y="64" text-anchor="end" font-size="9" fill="#9B8B75">2000</text>
+            <text x="45" y="104" text-anchor="end" font-size="9" fill="#9B8B75">1000</text>
+            <text x="45" y="144" text-anchor="end" font-size="9" fill="#9B8B75">0</text>
+            <text x="45" y="184" text-anchor="end" font-size="9" fill="#9B8B75">-1000</text>
+
+            <!-- Bar 1: CA Total (786M) -->
+            <rect x="60" y="48" width="40" height="92" rx="3" fill="#C8742F" />
+            <text x="80" y="42" text-anchor="middle" font-size="9" fill="#C8742F" font-weight="700">786</text>
+            <text x="80" y="200" text-anchor="middle" font-size="8" fill="#5A4A35">CA Total</text>
+
+            <!-- Connector line -->
+            <line x1="100" y1="80" x2="110" y2="80" stroke="#9B8B75" stroke-width="1" stroke-dasharray="3 2" />
+
+            <!-- Bar 2: Coûts Directs (-320M) -->
+            <rect x="115" y="80" width="40" height="60" rx="3" fill="#C8442F" />
+            <text x="135" y="145" text-anchor="middle" font-size="9" fill="#C8442F" font-weight="700">-320</text>
+            <text x="135" y="200" text-anchor="middle" font-size="8" fill="#5A4A35">Coûts Dir.</text>
+
+            <!-- Connector line -->
+            <line x1="155" y1="140" x2="165" y2="140" stroke="#9B8B75" stroke-width="1" stroke-dasharray="3 2" />
+
+            <!-- Bar 3: Sous-traitance (-85M) -->
+            <rect x="170" y="100" width="40" height="40" rx="3" fill="#E59500" />
+            <text x="190" y="145" text-anchor="middle" font-size="9" fill="#E59500" font-weight="700">-85</text>
+            <text x="190" y="200" text-anchor="middle" font-size="8" fill="#5A4A35">Sous-trait.</text>
+
+            <!-- Connector line -->
+            <line x1="210" y1="140" x2="220" y2="140" stroke="#9B8B75" stroke-width="1" stroke-dasharray="3 2" />
+
+            <!-- Bar 4: Bench (-45M) -->
+            <rect x="225" y="110" width="40" height="30" rx="3" fill="#9B8B75" />
+            <text x="245" y="145" text-anchor="middle" font-size="9" fill="#9B8B75" font-weight="700">-45</text>
+            <text x="245" y="200" text-anchor="middle" font-size="8" fill="#5A4A35">Bench</text>
+
+            <!-- Connector line -->
+            <line x1="265" y1="140" x2="275" y2="140" stroke="#9B8B75" stroke-width="1" stroke-dasharray="3 2" />
+
+            <!-- Bar 5: Retards (-32M) -->
+            <rect x="280" y="118" width="40" height="22" rx="3" fill="#C8442F" opacity="0.7" />
+            <text x="300" y="145" text-anchor="middle" font-size="9" fill="#C8442F" font-weight="700">-32</text>
+            <text x="300" y="200" text-anchor="middle" font-size="8" fill="#5A4A35">Retards</text>
+
+            <!-- Connector line -->
+            <line x1="320" y1="140" x2="330" y2="140" stroke="#9B8B75" stroke-width="1" stroke-dasharray="3 2" />
+
+            <!-- Bar 6: Marge Réelle (304M) -->
+            <rect x="335" y="52" width="40" height="88" rx="3" fill="#2D7A4F" />
+            <text x="355" y="46" text-anchor="middle" font-size="10" fill="#2D7A4F" font-weight="700">304</text>
+            <text x="355" y="200" text-anchor="middle" font-size="8" fill="#2D7A4F" font-weight="700">Marge Réelle</text>
+          </svg>
+          <div class="legend">
+            <div class="leg-item">
+              <div class="leg-dot" style="background:#C8742F"></div>CA Total
+            </div>
+            <div class="leg-item">
+              <div class="leg-dot" style="background:#C8442F"></div>Coûts déductibles
+            </div>
+            <div class="leg-item">
+              <div class="leg-dot" style="background:#2D7A4F"></div>Marge Réelle
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+     ONGLET 1 — FINANCE
+══════════════════════════════════════════ -->
+  <div class="tab-panel active" id="tab-finance">
+    <div class="page">
+
+      <div class="section-lbl">Vue Globale de la Performance Financière — Suivi Mensuel</div>
+
+      <div class="kpi-row-6">
+
+        <!-- 1️⃣ CHIFFRE D’AFFAIRES -->
+        <div class="kpi-card">
+          <div class="kpi-ic" style="background:#FFF4DC;">💶</div>
+          <div class="kpi-lbl">Chiffre d'Affaires</div>
+          <div class="kpi-val">13,95 Mds</div>
+          <div>
+            <span class="badge b-ok clickable" data-title="Chiffre d'Affaires — Advisory" data-message="<div class='modal-section'>
+<strong>Observation</strong>
+<p>Le chiffre d’affaires est en progression, principalement porté par BAAMTU France et les offres à forte valeur ajoutée.</p>
+</div>
+<div class='modal-section'>
+<strong>🎯 Décision Exécutive</strong>
+<p>Positionner BAAMTU France comme moteur prioritaire de croissance sur le prochain trimestre.</p>
+</div>
+<div class='modal-section'>
+<strong>Plan d'Action</strong>
+<p>Intensifier la prospection sur le segment Tech Pioneers<br>
+Prioriser les deals à forte marge<br>
+Allouer des ressources commerciales senior sur les opportunités stratégiques</p>
+</div>">
+              ✓ Consolider BAAMTU France
+            </span>
+          </div>
+          <div class="kpi-bar" style="background:var(--baamtu-orange);"></div>
+        </div>
+
+
+        <!-- 2️⃣ CA YTD -->
+        <div class="kpi-card">
+          <div class="kpi-ic" style="background:#E0EDF7;">🎯</div>
+          <div class="kpi-lbl">CA YTD vs Objectif</div>
+          <div class="kpi-val sm">93 %</div>
+          <div>
+            <span class="badge b-warn clickable" data-title="CA YTD vs Objectif — Advisory" data-message="<div class='modal-section'>
+<strong>Observation</strong>
+<p>Le chiffre d’affaires cumulé atteint 93 % de l’objectif annuel, laissant un écart de 7 % à combler avant clôture.</p>
+</div>
+<div class='modal-section'>
+<strong>🎯 Décision Exécutive</strong>
+<p>Réallouer temporairement les ressources commerciales vers les entités sous-performantes.</p>
+</div>
+<div class='modal-section'>
+<strong>Plan d'Action</strong>
+<p>Accélérer le closing des opportunités chaudes<br>
+Mettre en place une revue pipeline hebdomadaire<br>
+Prioriser les contrats à cycle court</p>
+</div>">
+              ⚠ Rééquilibrer performance
+            </span>
+          </div>
+          <div class="kpi-bar" style="background:var(--cyan);"></div>
+        </div>
+
+
+        <!-- 3️⃣ MARGE BRUTE -->
+        <div class="kpi-card">
+          <div class="kpi-ic" style="background:var(--green-lt);">📊</div>
+          <div class="kpi-lbl">Marge Brute Globale</div>
+          <div class="kpi-val">6,3 Mds</div>
+          <div>
+            <span class="badge b-ok clickable" data-title="Marge Brute Globale — Advisory" data-message="<div class='modal-section'>
+<strong>Observation</strong>
+<p>La marge brute reste solide, traduisant une bonne maîtrise des coûts delivery.</p>
+</div>
+<div class='modal-section'>
+<strong>🎯 Décision Exécutive</strong>
+<p>Maintenir une discipline tarifaire stricte et protéger les projets à forte rentabilité.</p>
+</div>
+<div class='modal-section'>
+<strong>Plan d'Action</strong>
+<p>Éviter les remises excessives<br>
+Surveiller les projets sous seuil stratégique<br>
+Optimiser l’arbitrage offshore / onshore</p>
+</div>">
+              ✓ Protéger la marge
+            </span>
+          </div>
+          <div class="kpi-bar" style="background:var(--green);"></div>
+        </div>
+
+
+        <!-- 4️⃣ EBITDA -->
+        <a href="rapport-ebitda-v2.html" style="text-decoration:none;color:inherit;">
+          <div class="kpi-card">
+            <div class="kpi-ic" style="background:#E0EDF7;">🏦</div>
+            <div class="kpi-lbl">EBITDA 📋</div>
+            <div class="kpi-val">3 Mds</div>
+            <span class="badge b-ok clickable" data-title="EBITDA — Advisory" data-message="<div class='modal-section'>
+<strong>Observation</strong>
+<p>L’EBITDA dépasse l’objectif annuel, générant une capacité d’investissement supplémentaire.</p>
+</div>
+<div class='modal-section'>
+<strong>🎯 Décision Exécutive</strong>
+<p>Allouer une partie de l’excédent à des investissements structurants et à fort ROI.</p>
+</div>
+<div class='modal-section'>
+<strong>Plan d'Action</strong>
+<p>Prioriser les projets technologiques stratégiques<br>
+Renforcer les capacités internes<br>
+Maintenir un équilibre croissance / prudence financière</p>
+</div>">
+              ✓ Investir stratégiquement
+            </span>
+            <div class="kpi-bar" style="background:var(--blue);"></div>
+          </div>
+        </a>
+
+
+        <!-- 5️⃣ TRÉSORERIE -->
+        <div class="kpi-card">
+          <div class="kpi-ic" style="background:#FFF4DC;">💸</div>
+          <div class="kpi-lbl">Trésorerie (Cash Conv.)</div>
+          <div class="kpi-val sm">78 %</div>
+          <div>
+            <span class="badge b-warn clickable" data-title="Trésorerie — Advisory" data-message="<div class='modal-section'>
+<strong>Observation</strong>
+<p>La trésorerie est inférieure au seuil cible de 85 %, exposant à un risque de tension court terme.</p>
+</div>
+<div class='modal-section'>
+<strong>🎯 Décision Exécutive</strong>
+<p>Prioriser le recouvrement des créances critiques avant tout nouvel engagement significatif.</p>
+</div>
+<div class='modal-section'>
+<strong>Plan d'Action</strong>
+<p>Relance client prioritaire<br>
+Suivi hebdomadaire du cash<br>
+Réduction des dépenses non essentielles</p>
+</div>">
+              ⚠ Sécuriser liquidité
+            </span>
+          </div>
+          <div class="kpi-bar" style="background:var(--amber);"></div>
+        </div>
+
+
+        <!-- 6️⃣ CARNET -->
+        <div class="kpi-card">
+          <div class="kpi-ic" style="background:var(--green-lt);">📅</div>
+          <div class="kpi-lbl">Carnet de Commandes</div>
+          <div class="kpi-val sm">7,4 m</div>
+          <div>
+            <span class="badge b-ok clickable" data-title="Carnet de Commandes — Advisory" data-message="<div class='modal-section'>
+<strong>Observation</strong>
+<p>Le carnet offre une visibilité confortable sur les revenus futurs.</p>
+</div>
+<div class='modal-section'>
+<strong>🎯 Décision Exécutive</strong>
+<p>Prioriser l’exécution des contrats stratégiques à forte marge.</p>
+</div>
+<div class='modal-section'>
+<strong>Plan d'Action</strong>
+<p>Allocation optimale des équipes<br>
+Suivi rapproché des jalons critiques<br>
+Accélération de la facturation intermédiaire</p>
+</div>">
+              ✓ Sécuriser exécution
+            </span>
+          </div>
+          <div class="kpi-bar" style="background:var(--green);"></div>
+        </div>
+
+
+      </div>
+      <div class="charts-21">
+
+        <div class="chart-card">
+          <div class="chart-hd">
+            <div>
+              <div class="chart-title">CA vs Objectif — Évolution mensuelle (FCFA)</div>
+              <div class="chart-sub">En millions FCFA · Oct 2025 → Mars 2026</div>
+            </div>
+          </div>
+          <svg width="100%" height="140" viewBox="0 0 560 190" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <linearGradient id="gCA" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#C8742F" stop-opacity=".16" />
+                <stop offset="100%" stop-color="#C8742F" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+            <line x1="48" y1="18" x2="548" y2="18" stroke="#E5DDD2" stroke-width="1" />
+            <line x1="48" y1="60" x2="548" y2="60" stroke="#E5DDD2" stroke-width="1" />
+            <line x1="48" y1="102" x2="548" y2="102" stroke="#E5DDD2" stroke-width="1" />
+            <line x1="48" y1="144" x2="548" y2="144" stroke="#E5DDD2" stroke-width="1" />
+            <text x="42" y="21" text-anchor="end" font-size="10" fill="#9B8B75">800M</text>
+            <text x="42" y="63" text-anchor="end" font-size="10" fill="#9B8B75">600M</text>
+            <text x="42" y="105" text-anchor="end" font-size="10" fill="#9B8B75">400M</text>
+            <text x="42" y="147" text-anchor="end" font-size="10" fill="#9B8B75">200M</text>
+            <polyline points="48,126 148,112 248,98 348,86 448,74 548,66" fill="none" stroke="#C8C0B5" stroke-width="2"
+              stroke-dasharray="6 4" />
+            <polygon points="48,142 148,118 248,104 348,82 448,64 548,46 548,168 48,168" fill="url(#gCA)" />
+            <polyline points="48,142 148,118 248,104 348,82 448,64 548,46" fill="none" stroke="#C8742F" stroke-width="3"
+              stroke-linejoin="round" stroke-linecap="round" />
+            <circle cx="48" cy="142" r="4" fill="#C8742F" />
+            <circle cx="148" cy="118" r="4" fill="#C8742F" />
+            <circle cx="248" cy="104" r="4" fill="#C8742F" />
+            <circle cx="348" cy="82" r="4" fill="#C8742F" />
+            <circle cx="448" cy="64" r="4" fill="#C8742F" />
+            <circle cx="548" cy="46" r="6" fill="#C8742F" stroke="#fff" stroke-width="2.5" />
+            <text x="548" y="36" text-anchor="middle" font-size="12" fill="#C8742F" font-weight="700">786M</text>
+            <text x="48" y="182" text-anchor="middle" font-size="10" fill="#9B8B75">Oct</text>
+            <text x="148" y="182" text-anchor="middle" font-size="10" fill="#9B8B75">Nov</text>
+            <text x="248" y="182" text-anchor="middle" font-size="10" fill="#9B8B75">Déc</text>
+            <text x="348" y="182" text-anchor="middle" font-size="10" fill="#9B8B75">Jan</text>
+            <text x="448" y="182" text-anchor="middle" font-size="10" fill="#9B8B75">Fév</text>
+            <text x="548" y="182" text-anchor="middle" font-size="11" fill="#C8742F" font-weight="700">Mars</text>
+          </svg>
+          <div class="legend">
+            <div class="leg-item">
+              <div class="leg-dot" style="background:#C8742F"></div>CA Réel (FCFA)
+            </div>
+            <div class="leg-item">
+              <div class="leg-dot" style="background:#C8C0B5"></div>Objectif
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-hd">
+            <div>
+              <div class="chart-title">Statut Objectifs Clés</div>
+              <div class="chart-sub">Réalisé vs cible — Mars 2026</div>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:16px; padding-top:6px;">
+
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                <span style="font-size:12.5px;color:var(--text-2);font-weight:600;">EBITDA — Obj. 295M FCFA</span>
+                <span style="font-size:13px;font-weight:700;color:var(--green);">328M</span>
+              </div>
+              <div class="prog-track">
+                <div class="prog-fill" style="width:100%;background:var(--green);"></div>
+              </div>
+              <div style="font-size:10.5px;color:var(--green);margin-top:4px;font-weight:600;">Objectif dépassé +11%
+              </div>
+            </div>
+
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                <span style="font-size:12.5px;color:var(--text-2);font-weight:600;">Trésorerie — Obj. 85%</span>
+                <span style="font-size:13px;font-weight:700;color:var(--amber);">78% </span>
+              </div>
+              <div class="prog-track">
+                <div class="prog-fill" style="width:78%;background:var(--amber);"></div>
+              </div>
+              <div style="font-size:10.5px;color:var(--amber);margin-top:4px;font-weight:600;">7 pts sous objectif</div>
+            </div>
+
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                <span style="font-size:12.5px;color:var(--text-2);font-weight:600;">CA YTD — Obj. 100%</span>
+                <span style="font-size:13px;font-weight:700;color:var(--amber);">93% </span>
+              </div>
+              <div class="prog-track">
+                <div class="prog-fill"
+                  style="width:93%;background:linear-gradient(90deg,var(--baamtu-orange),var(--amber));"></div>
+              </div>
+              <div style="font-size:10.5px;color:var(--amber);margin-top:4px;font-weight:600;">7% restant à couvrir
+              </div>
+            </div>
+
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                <span style="font-size:12.5px;color:var(--text-2);font-weight:600;">Carnet — Obj. 6 mois</span>
+                <span style="font-size:13px;font-weight:700;color:var(--green);">7,4 m </span>
+              </div>
+              <div class="prog-track">
+                <div class="prog-fill" style="width:100%;background:var(--green);"></div>
+              </div>
+              <div style="font-size:10.5px;color:var(--green);margin-top:4px;font-weight:600;">1,4 mois au-dessus</div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- NOUVEAU GRAPHIQUE : Répartition du Chiffre d'Affaires -->
+      <div class="chart-card" style="margin-bottom:24px;">
+        <div class="chart-hd">
+          <div>
+            <div class="chart-title">Répartition du Chiffre d'Affaires</div>
+            <div class="chart-sub">Par Filiale · En millions FCFA · % du total</div>
+          </div>
+        </div>
+
+        <!-- Horizontal Bar Chart - CA Répartition -->
+        <svg width="100%" height="200" viewBox="0 0 900 200" preserveAspectRatio="xMidYMid meet">
+          <!-- Grid lines -->
+          <line x1="140" y1="25" x2="880" y2="25" stroke="#E5DDD2" stroke-width="1" />
+          <line x1="140" y1="65" x2="880" y2="65" stroke="#E5DDD2" stroke-width="1" />
+          <line x1="140" y1="105" x2="880" y2="105" stroke="#E5DDD2" stroke-width="1" />
+          <line x1="140" y1="145" x2="880" y2="145" stroke="#E5DDD2" stroke-width="1" />
+
+          <!-- Y-axis labels -->
+          <text x="130" y="29" text-anchor="end" font-size="11" fill="#5A4A35" font-weight="600">BAAMTU France</text>
+          <text x="130" y="69" text-anchor="end" font-size="11" fill="#5A4A35" font-weight="600">BAAMTU Côte
+            d'Ivoire</text>
+          <text x="130" y="109" text-anchor="end" font-size="11" fill="#5A4A35" font-weight="600">BAAMTU
+            Consulting</text>
+          <text x="130" y="149" text-anchor="end" font-size="11" fill="#5A4A35" font-weight="600">BAAMTU SYSTEMS</text>
+          <text x="130" y="189" text-anchor="end" font-size="11" fill="#5A4A35" font-weight="600">BAAMTU
+            Datamation</text>
+
+          <!-- X-axis labels -->
+          <text x="140" y="20" text-anchor="middle" font-size="10" fill="#9B8B75">0</text>
+          <text x="330" y="20" text-anchor="middle" font-size="10" fill="#9B8B75">200M</text>
+          <text x="510" y="20" text-anchor="middle" font-size="10" fill="#9B8B75">400M</text>
+          <text x="695" y="20" text-anchor="middle" font-size="10" fill="#9B8B75">600M</text>
+          <text x="880" y="20" text-anchor="middle" font-size="10" fill="#9B8B75">800M</text>
+
+          <!-- Bar 1: BAAMTU Datamation - Largest (245M, 31%) - Darkest brown -->
+          <rect x="145" y="160" width="440" height="24" rx="4" fill="#3D2816" />
+          <text x="155" y="177" text-anchor="start" font-size="11" fill="#fff" font-weight="600">245M</text>
+          <text x="575" y="177" text-anchor="end" font-size="11" fill="#fff" font-weight="700">31%</text>
+
+          <!-- Bar 2: SONATEL Phase 1 - Second largest (218M, 28%) - Dark brown -->
+          <rect x="145" y="120" width="391" height="24" rx="4" fill="#6B4423" />
+          <text x="155" y="137" text-anchor="start" font-size="11" fill="#fff" font-weight="600">218M</text>
+          <text x="526" y="137" text-anchor="end" font-size="11" fill="#fff" font-weight="700">28%</text>
+
+          <!-- Bar 3: BAAMTU Consulting - Medium (156M, 20%) - Medium brown -->
+          <rect x="145" y="80" width="280" height="24" rx="4" fill="#8B5A2B" opacity="0.85" />
+          <text x="155" y="97" text-anchor="start" font-size="11" fill="#fff" font-weight="600">156M</text>
+          <text x="415" y="97" text-anchor="end" font-size="11" fill="#fff" font-weight="700">20%</text>
+
+          <!-- Bar 4: BAAMTU Côte d'Ivoire - Small (90M, 11%) - Light brown -->
+          <rect x="145" y="40" width="162" height="24" rx="4" fill="#A0522D" opacity="0.7" />
+          <text x="155" y="57" text-anchor="start" font-size="11" fill="#fff" font-weight="600">90M</text>
+          <text x="297" y="57" text-anchor="end" font-size="11" fill="#fff" font-weight="700">11%</text>
+
+          <!-- Bar 5: BAAMTU France - Smallest (77M, 10%) - Lightest brown -->
+          <rect x="145" y="0" width="138" height="24" rx="4" fill="#CD853F" opacity="0.65" />
+          <text x="155" y="17" text-anchor="start" font-size="11" fill="#fff" font-weight="600">77M</text>
+          <text x="273" y="17" text-anchor="end" font-size="11" fill="#fff" font-weight="700">10%</text>
+        </svg>
+
+        <div class="legend">
+          <div class="leg-item">
+            <div class="leg-dot" style="background:#3D2816"></div>Contribution majeure (>25%)
+          </div>
+          <div class="leg-item">
+            <div class="leg-dot" style="background:#6B4423"></div>Contribution significative (15-25%)
+          </div>
+          <div class="leg-item">
+            <div class="leg-dot" style="background:#A0522D"></div>Contribution modérée (<15%) </div>
+          </div>
+
+          <div
+            style="margin-top:18px; padding:14px 16px; background:var(--surface); border-radius:10px; border-left:4px solid var(--baamtu-brown);">
+            <div style="font-size:12.5px; font-weight:700; color:var(--baamtu-brown); margin-bottom:6px;">🧠 Analyse
+              Stratégique</div>
+            <div style="font-size:11.5px; color:var(--text-2); line-height:1.6;">
+              <strong>Dépendance critique :</strong> BAAMTU Datamation et SONATEL Phase 1 représentent <strong>59% du CA
+                total</strong>.
+              <strong>Diversificationneeded :</strong> BAAMTU France (10%) et Côte d'Ivoire (11%) offrent un potentiel
+              de croissance pour réduire la concentration.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+     ONGLET 2 — DELIVERY
+══════════════════════════════════════════ -->
+    <div class="tab-panel" id="tab-delivery">
+      <div class="page">
+
+        <div class="section-lbl">Suivi & Pilotage des Livraisons de Projets — Rentabilité Opérationnelle</div>
+
+        <div class="alert-banner alert-red">
+          <span style="font-size:18px;">🔴</span>
+          <strong>Projet SONATEL Phase 2 — Dépassement budget critique : +38%</strong>
+          <span style="opacity:.8;">· Coût réel 92M vs budget 67M FCFA · Action requise</span>
+        </div>
+
+        <div class="kpi-row-4">
+
+          <a href="rapport-utilisation.html" style="text-decoration:none;color:inherit;">
+            <div class="kpi-card" style="cursor:pointer;">
+              <div class="kpi-ic" style="background:#FFF4DC;">👥</div>
+              <div class="kpi-lbl">Taux d'Utilisation Consultants</div>
+              <div class="kpi-val">76 %</div>
+              <div style="margin-top:10px;">
+                <span class="badge b-warn clickable" style="cursor:pointer;"
+                  data-title="Taux d'Utilisation Consultants — Advisory" data-message="<div class='modal-section'>
+    <strong>Observation</strong>
+    <p>Le taux d’utilisation est inférieur au seuil optimal stratégique (80–85%), ce qui réduit l’effet de levier opérationnel.</p>
+    </div>
+    <div class='modal-section'>
+    <strong>Décision exécutive</strong>
+    <p>Optimiser immédiatement l’allocation des ressources et sécuriser du pipeline court terme.</p>
+    </div>
+    <div class='modal-section'>
+    <strong>Plan d'action</strong>
+    <p>Identifier consultants sous-utilisés<br>Réaffectation prioritaire sur projets à forte marge<br>Accélération closing commercial<br>Ajustement plan de recrutement si tendance persistante</p>
+    </div>">⚠ Optimiser staffing</span>
+
+              </div>
+
+              <div class="kpi-bar" style="background:var(--amber);"></div>
+            </div>
+          </a>
+
+          <div class="kpi-card">
+            <div class="kpi-ic" style="background:var(--red-lt);">🪑</div>
+            <div class="kpi-lbl">Bench Rate</div>
+            <div class="kpi-val">13 %</div>
+            <div style="margin-top:10px;">
+              <span class="badge b-ko clickable" style="cursor:pointer;" data-title="Bench Rate — Advisory"
+                data-message="<div class='modal-section'>
+    <strong>Observation</strong>
+    <p>Un bench rate à 13% génère un coût non facturé significatif impactant la rentabilité globale.</p>
+    </div>
+    <div class='modal-section'>
+    <strong>Décision exécutive</strong>
+    <p>Activer un plan de repositionnement immédiat des ressources inactives.</p>
+    </div>
+    <div class='modal-section'>
+    <strong>Plan d'action</strong>
+    <p>Réaffectation sur missions rentables<br>Propositions de missions ponctuelles aux clients existants<br>Plan de montée en compétences aligné pipeline<br>Gel des recrutements non critiques</p>
+    </div>">🚨 Réduire bench</span>
+
+            </div>
+            <div class="kpi-bar" style="background:var(--red);"></div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-ic" style="background:#E0EDF7;">💼</div>
+            <div class="kpi-lbl">Coût Delivery</div>
+            <div class="kpi-val sm">36 % CA</div>
+            <div style="margin-top:10px;">
+              <span class="badge b-warn clickable" style="cursor:pointer;" data-title="Coût Delivery — Advisory"
+                data-message="<div class='modal-section'>
+    <strong>Observation</strong>
+    <p>Le coût delivery représente 36% du CA. Toute dérive impacte directement la marge cible (&gt;42%).</p>
+    </div>
+    <div class='modal-section'>
+    <strong>Décision exécutive</strong>
+    <p>Optimiser la structure de coûts sans dégrader la qualité.</p>
+    </div>
+    <div class='modal-section'>
+    <strong>Plan d'action</strong>
+    <p>Analyse détaillée des postes coûts<br>Arbitrage offshore / onshore<br>Automatisation tâches répétitives<br>Ajustement pricing sur nouveaux contrats</p>
+    </div>">⚖ Arbitrer coûts delivery</span>
+
+            </div>
+            <div class="kpi-bar" style="background:var(--blue);"></div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-ic" style="background:#E0EDF7;">🌐</div>
+            <div class="kpi-lbl">Part Offshore </div>
+            <div class="kpi-val">28 %</div>
+            <div style="margin-top:10px;">
+              < <span class="badge b-warn clickable" style="cursor:pointer;" data-title="Part Offshore — Advisory"
+                data-message="<div class='modal-section'>
+    <strong>Observation</strong>
+    <p>La part offshore est sous-optimisée par rapport au levier de marge potentiel.</p>
+    </div>
+    <div class='modal-section'>
+    <strong>Décision exécutive</strong>
+    <p>Augmenter progressivement l’allocation offshore sur projets compatibles.</p>
+    </div>
+    <div class='modal-section'>
+    <strong>Plan d'action</strong>
+    <p>Identifier projets éligibles offshore<br>Renforcer coordination delivery<br>Mettre en place contrôle qualité renforcé<br>Intégrer offshore dès la phase proposition commerciale</p>
+    </div>">🎯 Optimiser mix delivery</span>
+            </div>
+            <div class="kpi-bar" style="background:var(--cyan);"></div>
+          </div>
+
+        </div>
+
+
+        <div class="charts-3col">
+
+          <div class="chart-card">
+            <div class="chart-hd">
+              <div>
+                <div class="chart-title">Marge par Projet</div>
+                <div class="chart-sub">% marge brute · seuil 42%</div>
+              </div>
+            </div>
+            <svg width="100%" height="175" viewBox="0 0 300 175" preserveAspectRatio="xMidYMid meet">
+              <line x1="30" y1="16" x2="285" y2="16" stroke="#E5DDD2" stroke-width="1" />
+              <line x1="30" y1="52" x2="285" y2="52" stroke="#E5DDD2" stroke-width="1" />
+              <line x1="30" y1="88" x2="285" y2="88" stroke="#E5DDD2" stroke-width="1" />
+              <line x1="30" y1="124" x2="285" y2="124" stroke="#E5DDD2" stroke-width="1" />
+              <text x="26" y="19" text-anchor="end" font-size="9" fill="#9B8B75">60%</text>
+              <text x="26" y="55" text-anchor="end" font-size="9" fill="#9B8B75">45%</text>
+              <text x="26" y="91" text-anchor="end" font-size="9" fill="#9B8B75">30%</text>
+              <text x="26" y="127" text-anchor="end" font-size="9" fill="#9B8B75">15%</text>
+              <rect x="38" y="34" width="34" height="90" rx="5" fill="#2D7A4F" opacity=".88" style="cursor:pointer;"
+                data-message="<div class='modal-section'>\n    <strong>Observation</strong>\n    <p>Marge à 53%, supérieure au seuil stratégique de 42%.</p>\n    </div>\n    <div class='modal-section'>\n    <strong>Décision exécutive</strong>\n    <p>Maintenir structure économique, éviter expansions non rentables.</p>\n    </div>\n    <div class='modal-section'>\n    <strong>Plan d'action</strong>\n    <p>Audit des postes de coûts<br>Réaffectation ressources si besoin<br>Stopper extensions non rentables</p>\n    </div>" />
+              <text x="55" y="28" text-anchor="middle" font-size="11" fill="#2D7A4F" font-weight="700">53%</text>
+              <text x="55" y="152" text-anchor="middle" font-size="9" fill="#5A4A35" style="cursor:pointer;"
+                data-message="<div class='modal-section'>\n    <strong>Observation</strong>\n    <p>Marge à 53%, supérieure au seuil stratégique de 42%.</p>\n    </div>\n    <div class='modal-section'>\n    <strong>Décision exécutive</strong>\n    <p>Maintenir structure économique, éviter expansions non rentables.</p>\n    </div>\n    <div class='modal-section'>\n    <strong>Plan d'action</strong>\n    <p>Audit des postes de coûts<br>Réaffectation ressources si besoin<br>Stopper extensions non rentables</p>\n    </div>">ECOBANK
+                Core Upgrade</text>
+              <rect x="92" y="70" width="34" height="54" rx="5" fill="#E59500" opacity=".82" style="cursor:pointer;"
+                data-message="<div class='modal-section'>\n    <strong>Observation</strong>\n    <p>Marge à 36%, proche du seuil (30–41%).</p>\n    </div>\n    <div class='modal-section'>\n    <strong>Décision exécutive</strong>\n    <p>Revoir structure économique pour atteindre 42%.</p>\n    </div>\n    <div class='modal-section'>\n    <strong>Plan d'action</strong>\n    <p>Audit des postes de coûts<br>Réaffectation des ressources<br>Renégociation périmètre si possible</p>\n    </div>" />
+              <text x="109" y="64" text-anchor="middle" font-size="11" fill="#E59500" font-weight="700">36%</text>
+              <text x="109" y="152" text-anchor="middle" font-size="9" fill="#5A4A35" style="cursor:pointer;"
+                data-message="<div class='modal-section'>\n    <strong>Observation</strong>\n    <p>Marge à 36%, proche du seuil (30–41%).</p>\n    </div>\n    <div class='modal-section'>\n    <strong>Décision exécutive</strong>\n    <p>Revoir structure économique pour atteindre 42%.</p>\n    </div>\n    <div class='modal-section'>\n    <strong>Plan d'action</strong>\n    <p>Audit des postes de coûts<br>Réaffectation des ressources<br>Renégociation périmètre si possible</p>\n    </div>">DGID
+                Digitalisation</text>
+              <rect x="146" y="46" width="34" height="78" rx="5" fill="#2D7A4F" opacity=".78" style="cursor:pointer;"
+                data-message="<div class='modal-section'>\n    <strong>Observation</strong>\n    <p>Marge à 47%, supérieure au seuil stratégique de 42%.</p>\n    </div>\n    <div class='modal-section'>\n    <strong>Décision exécutive</strong>\n    <p>Conserver la structure économique et capitaliser sur ce projet.</p>\n    </div>\n    <div class='modal-section'>\n    <strong>Plan d'action</strong>\n    <p>Maintenir ressources clés<br>Évaluer opportunités scale-up</p>\n    </div>" />
+              <text x="163" y="40" text-anchor="middle" font-size="11" fill="#2D7A4F" font-weight="700">47%</text>
+              <text x="163" y="152" text-anchor="middle" font-size="9" fill="#5A4A35" style="cursor:pointer;"
+                data-message="<div class='modal-section'>\n    <strong>Observation</strong>\n    <p>Marge à 47%, supérieure au seuil stratégique de 42%.</p>\n    </div>\n    <div class='modal-section'>\n    <strong>Décision exécutive</strong>\n    <p>Conserver la structure économique et capitaliser sur ce projet.</p>\n    </div>\n    <div class='modal-section'>\n    <strong>Plan d'action</strong>\n    <p>Maintenir ressources clés<br>Évaluer opportunités scale-up</p>\n    </div>">SONATEL
+                Phase 2</text>
+              <rect x="200" y="88" width="34" height="36" rx="5" fill="#C8442F" opacity=".88" style="cursor:pointer;"
+                data-message="<div class='modal-section'>\n    <strong>Observation</strong>\n    <p>Marge à 24%, inférieure au seuil stratégique de 42%.</p>\n    </div>\n    <div class='modal-section'>\n    <strong>Décision exécutive</strong>\n    <p>Revoir immédiatement la structure économique du projet.</p>\n    </div>\n    <div class='modal-section'>\n    <strong>Plan d'action</strong>\n    <p>Audit des postes de coûts<br>Réaffectation des ressources<br>Renégociation périmètre si possible<br>Stopper extensions non rentables</p>\n    </div>" />
+              <text x="217" y="82" text-anchor="middle" font-size="11" fill="#C8442F" font-weight="700">24%</text>
+              <text x="217" y="152" text-anchor="middle" font-size="9" fill="#5A4A35" style="cursor:pointer;"
+                data-message="<div class='modal-section'>\n    <strong>Observation</strong>\n    <p>Marge à 24%, inférieure au seuil stratégique de 42%.</p>\n    </div>\n    <div class='modal-section'>\n    <strong>Décision exécutive</strong>\n    <p>Revoir immédiatement la structure économique du projet.</p>\n    </div>\n    <div class='modal-section'>\n    <strong>Plan d'action</strong>\n    <p>Audit des postes de coûts<br>Réaffectation des ressources<br>Renégociation périmètre si possible<br>Stopper extensions non rentables</p>\n    </div>">SONATEL
+                Phase 1</text>
+              <rect x="254" y="40" width="34" height="84" rx="5" fill="#2D7A4F" opacity=".78" style="cursor:pointer;"
+                data-message="<div class='modal-section'>\n    <strong>Observation</strong>\n    <p>Marge à 49%, supérieure au seuil stratégique de 42%.</p>\n    </div>\n    <div class='modal-section'>\n    <strong>Décision exécutive</strong>\n    <p>Conserver la structure économique et capitaliser sur ce projet.</p>\n    </div>\n    <div class='modal-section'>\n    <strong>Plan d'action</strong>\n    <p>Maintenir ressources clés<br>Intégrer offshore où pertinent</p>\n    </div>" />
+              <text x="271" y="34" text-anchor="middle" font-size="11" fill="#2D7A4F" font-weight="700">49%</text>
+              <text x="271" y="152" text-anchor="middle" font-size="9" fill="#5A4A35" style="cursor:pointer;"
+                data-message="<div class='modal-section'>\n    <strong>Observation</strong>\n    <p>Marge à 49%, supérieure au seuil stratégique de 42%.</p>\n    </div>\n    <div class='modal-section'>\n    <strong>Décision exécutive</strong>\n    <p>Conserver la structure économique et capitaliser sur ce projet.</p>\n    </div>\n    <div class='modal-section'>\n    <strong>Plan d'action</strong>\n    <p>Maintenir ressources clés<br>Intégrer offshore où pertinent</p>\n    </div>">ORANGE
+                Data Integration</text>
+              <line x1="30" y1="66" x2="285" y2="66" stroke="#E59500" stroke-width="1.8" stroke-dasharray="5 3" />
+              <text x="287" y="69" font-size="9" fill="#E59500">42%</text>
+            </svg>
+            <div class="legend">
+              <div class="leg-item">
+                <div class="leg-dot" style="background:#2D7A4F"></div>OK
+              </div>
+              <div class="leg-item">
+                <div class="leg-dot" style="background:#C8442F"></div>Sous seuil
+              </div>
+              <div class="leg-item">
+                <div class="leg-dot" style="background:#E59500"></div>Seuil 42%
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-hd">
+              <div>
+                <div class="chart-title">Mix Forfait / Régie</div>
+                <div class="chart-sub">Répartition du CA</div>
+              </div>
+            </div>
+            <div class="donut-wrap">
+              <svg width="135" height="135" viewBox="0 0 135 135" flex-shrink="0">
+                <circle cx="67.5" cy="67.5" r="50" fill="none" stroke="#F5F2ED" stroke-width="22" />
+                <circle cx="67.5" cy="67.5" r="50" fill="none" stroke="#C8742F" stroke-width="22"
+                  stroke-dasharray="195 119" stroke-dashoffset="78" transform="rotate(-90 67.5 67.5)" opacity=".88" />
+                <circle cx="67.5" cy="67.5" r="50" fill="none" stroke="#6B4423" stroke-width="22"
+                  stroke-dasharray="119 195" stroke-dashoffset="-117" transform="rotate(-90 67.5 67.5)" opacity=".75" />
+                <text x="67.5" y="62" text-anchor="middle" font-size="22" fill="#2D2416" font-weight="700"
+                  font-family="Playfair Display,serif">62%</text>
+                <text x="67.5" y="78" text-anchor="middle" font-size="10" fill="#9B8B75">Forfait</text>
+              </svg>
+              <div class="donut-legend">
+                <div>
+                  <div class="donut-row">
+                    <div class="donut-label">
+                      <div style="width:10px;height:10px;border-radius:3px;background:#C8742F;"></div>Forfait
+                    </div>
+                    <div class="donut-val" style="color:#C8742F;">62%</div>
+                  </div>
+                  <div style="font-size:11px;color:var(--text-3);margin-top:3px;font-weight:500;">487M FCFA · Obj. 60%
+                  </div>
+                </div>
+                <div>
+                  <div class="donut-row">
+                    <div class="donut-label">
+                      <div style="width:10px;height:10px;border-radius:3px;background:#6B4423;"></div>Régie
+                    </div>
+                    <div class="donut-val" style="color:#6B4423;">38%</div>
+                  </div>
+                  <div style="font-size:11px;color:var(--text-3);margin-top:3px;font-weight:500;">299M FCFA</div>
+                </div>
+                <div
+                  style="padding:10px 12px;background:var(--green-lt);border-radius:8px;font-size:11.5px;color:var(--green);font-weight:700;">
+                  ✓ Objectif 60/40 atteint
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-hd">
+              <div>
+                <div class="chart-title">Écart Budget vs Réel</div>
+                <div class="chart-sub">% dépassement</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px;padding-top:6px;">
+              <div class="prog-row">
+                <div class="prog-lbl">ECOBANK</div>
+                <div class="prog-track">
+                  <div class="prog-fill" style="width:7%;background:var(--green);"></div>
+                </div>
+                <div class="prog-val" style="color:var(--green);">+7%</div>
+              </div>
+              <div class="prog-row">
+                <div class="prog-lbl">DGID</div>
+                <div class="prog-track">
+                  <div class="prog-fill" style="width:19%;background:var(--amber);"></div>
+                </div>
+                <div class="prog-val" style="color:var(--amber);">+19%</div>
+              </div>
+              <div class="prog-row">
+                <div class="prog-lbl">SONATEL Phase 1</div>
+                <div class="prog-track">
+                  <div class="prog-fill" style="width:4%;background:var(--green);"></div>
+                </div>
+                <div class="prog-val" style="color:var(--green);">+4%</div>
+              </div>
+              <div class="prog-row">
+                <div class="prog-lbl">SONATEL P2 🔴</div>
+                <div class="prog-track">
+                  <div class="prog-fill" style="width:38%;background:var(--red);"></div>
+                </div>
+                <div class="prog-val" style="color:var(--red);">+38%</div>
+              </div>
+              <div class="prog-row">
+                <div class="prog-lbl">ORANGE</div>
+                <div class="prog-track">
+                  <div class="prog-fill" style="width:2%;background:var(--green);"></div>
+                </div>
+                <div class="prog-val" style="color:var(--green);">+2%</div>
+              </div>
+              <div
+                style="font-size:10.5px;color:var(--text-3);margin-top:6px;padding-top:10px;border-top:1px solid var(--border);font-weight:500;">
+                Seuil alerte : +20% · Source : ERP / PMO
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+     ONGLET 3 — CLIENTS
+══════════════════════════════════════════ -->
+    <div class="tab-panel" id="tab-clients">
+      <div class="page">
+
+        <div class="section-lbl">Analyse de la Satisfaction Client & Performance Commerciale</div>
+
+        <!-- KPI Row -->
+        <div class="kpi-row-5">
+          <a href="rapport-dso-v2.html" style="text-decoration:none;color:inherit;">
+            <div class="kpi-card" style="cursor:pointer;">
+              <div class="kpi-ic" style="background:#FFF4DC;">🕒</div>
+              <div class="kpi-lbl">Encours Clients (DSO)</div>
+              <div class="kpi-val">42 j</div>
+              <span class="badge b-ok clickable" style="cursor:pointer;margin-top:6px;"
+                data-title="Encours Clients (DSO) — Advisory"
+                data-message="<div class='modal-section'><strong>Observation</strong><p>DSO à 32 jours, légèrement supérieur à l'objectif de 30 jours.</p></div><div class='modal-section'><strong>🎯 Décision Exécutive</strong><p>Maintenir suivi régulier et relances proactives.</p></div><div class='modal-section'><strong>Plan d'Action</strong><p>Vérifier les clients à encours >35 jours<br>Alerter commerciaux<br>Renforcer communication avec les clients clés</p></div>">Optimiser
+                recouvrement</span>
+              <div class="kpi-bar" style="background:var(--green);"></div>
+            </div>
+          </a>
+
+          <div class="kpi-card">
+            <div class="kpi-ic" style="background:var(--green-lt);">⭐</div>
+            <div class="kpi-lbl">NPS Clients IT</div>
+            <div class="kpi-val">+39</div>
+            <span class="badge b-ok clickable" style="cursor:pointer;margin-top:6px;"
+              data-title="NPS Clients IT — Advisory"
+              data-message="<div class='modal-section'><strong>Observation</strong><p>NPS positif à +39, clients satisfaits mais quelques points d'amélioration dans le support IT.</p></div><div class='modal-section'><strong>🎯 Décision Exécutive</strong><p>Capitaliser sur satisfaction actuelle pour fidéliser et cross-sell.</p></div><div class='modal-section'><strong>Plan d'Action</strong><p>Identifier clients mécontents<br>Plan de contact personnalisé<br>Améliorer support pour les fonctionnalités clés</p></div>">Renforcer
+              fidélisation</span>
+            <div class="kpi-bar" style="background:var(--green);"></div>
+          </div>
+
+          <a href="rapport-churn.html" style="text-decoration:none;color:inherit;">
+            <div class="kpi-card" style="cursor:pointer;">
+              <div class="kpi-ic" style="background:var(--red-lt);">📉</div>
+              <div class="kpi-lbl">Churn Clients</div>
+              <div class="kpi-val">4,5 %</div>
+              <span class="badge b-warn clickable" style="cursor:pointer;margin-top:6px;"
+                data-title="Churn Clients — Advisory"
+                data-message="<div class='modal-section'><strong>Observation</strong><p>Churn stable à 4,5 %, concentré sur clients projets ponctuels.</p></div><div class='modal-section'><strong>🎯 Décision Exécutive</strong><p>Prioriser retention sur clients à risque.</p></div><div class='modal-section'><strong>Plan d'Action</strong><p>Contacter clients en churn récent<br>Proposer offres adaptées<br>Analyser causes de départ</p></div>">Réduire
+                churn</span>
+              <div class="kpi-bar" style="background:var(--orange);"></div>
+            </div>
+          </a>
+
+          <div class="kpi-card">
+            <div class="kpi-ic" style="background:#E0EDF7;">🔁</div>
+            <div class="kpi-lbl">Part Revenus Récurrents</div>
+            <div class="kpi-val">65 %</div>
+            <span class="badge b-ok clickable" style="cursor:pointer;margin-top:6px;"
+              data-title="Part Revenus Récurrents — Advisory"
+              data-message="<div class='modal-section'><strong>Observation</strong><p>65 % des revenus sont récurrents, croissance stable.</p></div><div class='modal-section'><strong>🎯 Décision Exécutive</strong><p>Développer revenus récurrents SaaS / support.</p></div><div class='modal-section'><strong>Plan d'Action</strong><p>Convertir contrats ponctuels en abonnements<br>Lancer promotions ciblées<br>Suivre évolution mensuelle</p></div>">Augmenter
+              récurrence</span>
+            <div class="kpi-bar" style="background:var(--cyan);"></div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-ic" style="background:#E0EDF7;">🏷️</div>
+            <div class="kpi-lbl">Discount Moyen</div>
+            <div class="kpi-val">8,2 %</div>
+            <span class="badge b-warn clickable" style="cursor:pointer;margin-top:6px;"
+              data-title="Discount Moyen — Advisory"
+              data-message="<div class='modal-section'><strong>Observation</strong><p>Remises moyennes à 8,2 %, légèrement au-dessus du seuil cible (≤ 8 %).</p></div><div class='modal-section'><strong>🎯 Décision Exécutive</strong><p>Encadrer politique discount pour préserver marge.</p></div><div class='modal-section'><strong>Plan d'Action</strong><p>Révision offres commerciales<br>Formation commerciaux sur règles discount<br>Suivi mensuel des écarts</p></div>">Maîtrise
+              remises</span>
+            <div class="kpi-bar" style="background:var(--blue);"></div>
+          </div>
+        </div>
+
+
+
+        <div class="charts-2col">
+
+          <div class="chart-card">
+            <div class="chart-hd">
+              <div>
+                <div class="chart-title">Part Revenus Récurrents</div>
+                <div class="chart-sub">SaaS / Support vs Projets ponctuels</div>
+              </div>
+            </div>
+            <svg width="100%" height="175" viewBox="0 0 480 175" preserveAspectRatio="xMidYMid meet">
+              <line x1="10" y1="14" x2="470" y2="14" stroke="#E5DDD2" stroke-width="1" />
+              <line x1="10" y1="54" x2="470" y2="54" stroke="#E5DDD2" stroke-width="1" />
+              <line x1="10" y1="94" x2="470" y2="94" stroke="#E5DDD2" stroke-width="1" />
+              <rect x="14" y="40" width="50" height="54" rx="4" fill="#0891B2" opacity=".82" />
+              <rect x="14" y="94" width="50" height="38" rx="4" fill="#C8C0B5" opacity=".48" />
+              <text x="39" y="32" text-anchor="middle" font-size="11" fill="#0891B2" font-weight="700">58%</text>
+              <text x="39" y="146" text-anchor="middle" font-size="9" fill="#9B8B75">Oct</text>
+              <rect x="88" y="34" width="50" height="60" rx="4" fill="#0891B2" opacity=".85" />
+              <rect x="88" y="94" width="50" height="38" rx="4" fill="#C8C0B5" opacity=".48" />
+              <text x="113" y="26" text-anchor="middle" font-size="11" fill="#0891B2" font-weight="700">60%</text>
+              <text x="113" y="146" text-anchor="middle" font-size="9" fill="#9B8B75">Nov</text>
+              <rect x="162" y="36" width="50" height="58" rx="4" fill="#0891B2" opacity=".87" />
+              <rect x="162" y="94" width="50" height="38" rx="4" fill="#C8C0B5" opacity=".48" />
+              <text x="187" y="28" text-anchor="middle" font-size="11" fill="#0891B2" font-weight="700">59%</text>
+              <text x="187" y="146" text-anchor="middle" font-size="9" fill="#9B8B75">Déc</text>
+              <rect x="236" y="28" width="50" height="66" rx="4" fill="#0891B2" opacity=".9" />
+              <rect x="236" y="94" width="50" height="38" rx="4" fill="#C8C0B5" opacity=".48" />
+              <text x="261" y="20" text-anchor="middle" font-size="11" fill="#0891B2" font-weight="700">62%</text>
+              <text x="261" y="146" text-anchor="middle" font-size="9" fill="#9B8B75">Jan</text>
+              <rect x="310" y="22" width="50" height="72" rx="4" fill="#0891B2" opacity=".92" />
+              <rect x="310" y="94" width="50" height="38" rx="4" fill="#C8C0B5" opacity=".48" />
+              <text x="335" y="14" text-anchor="middle" font-size="11" fill="#0891B2" font-weight="700">64%</text>
+              <text x="335" y="146" text-anchor="middle" font-size="9" fill="#9B8B75">Fév</text>
+              <rect x="384" y="18" width="50" height="76" rx="4" fill="#0891B2" opacity="1" />
+              <rect x="384" y="94" width="50" height="38" rx="4" fill="#C8C0B5" opacity=".48" />
+              <text x="409" y="12" text-anchor="middle" font-size="12" fill="#0891B2" font-weight="700">65%</text>
+              <text x="409" y="146" text-anchor="middle" font-size="10" fill="#C8742F" font-weight="700">Mars</text>
+            </svg>
+            <div class="legend">
+              <div class="leg-item">
+                <div class="leg-dot" style="background:#0891B2"></div>Récurrents (SaaS / Support / Licences)
+              </div>
+              <div class="leg-item">
+                <div class="leg-dot" style="background:#C8C0B5"></div>Ponctuels
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-hd">
+              <div>
+                <div class="chart-title">DSO & Statut Paiements</div>
+                <div class="chart-sub">Top clients — encours & retards</div>
+              </div>
+            </div>
+            <table style="margin-top:0;">
+              <thead>
+                <tr>
+                  <th>Client</th>
+                  <th>DSO</th>
+                  <th>Encours</th>
+                  <th>Statut</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="c-row">
+                      <div class="c-av" style="background:linear-gradient(135deg,#C8742F,#6B4423);">EB</div>ECOBANK
+                      Sénégal
+                    </div>
+                  </td>
+                  <td style="color:var(--green);font-weight:700;">24 j</td>
+                  <td style="font-weight:600;">32M</td>
+                  <td><span class="badge b-ok clickable" style="cursor:pointer;" data-title="ECOBANK Sénégal — Advisory"
+                      data-message="<div class='modal-section'><strong>Observation</strong><p>DSO stable à 24 jours — encours maîtrisé.</p></div><div class='modal-section'><strong>Décision exécutive</strong><p>Maintenir politique de recouvrement actuelle.</p></div><div class='modal-section'><strong>Plan d'action</strong><p>Surveiller paiements mensuels; alerter si >45j.</p></div>">✓
+                      OK</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="c-row">
+                      <div class="c-av" style="background:linear-gradient(135deg,#2D7A4F,#0891B2);">SN</div>SONATEL
+                    </div>
+                  </td>
+                  <td style="color:var(--green);font-weight:700;">19 j</td>
+                  <td style="font-weight:600;">28M</td>
+                  <td><span class="badge b-ok clickable" style="cursor:pointer;" data-title="SONATEL — Advisory"
+                      data-message="<div class='modal-section'><strong>Observation</strong><p>DSO bas à 19 jours — bons comportements de paiement.</p></div><div class='modal-section'><strong>Décision exécutive</strong><p>Conserver conditions commerciales actuelles.</p></div><div class='modal-section'><strong>Plan d'action</strong><p>Maintenir suivi mensuel; opportunité cross-sell.</p></div>">✓
+                      OK</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="c-row">
+                      <div class="c-av" style="background:linear-gradient(135deg,#E59500,#C8442F);">DG</div>DGID
+                    </div>
+                  </td>
+                  <td style="color:var(--amber);font-weight:700;">38 j</td>
+                  <td style="font-weight:600;">51M</td>
+                  <td><span class="badge b-warn clickable" style="cursor:pointer;" data-title="DGID — Advisory"
+                      data-message="<div class='modal-section'><strong>Observation</strong><p>DSO élevé à 38 jours; encours en augmentation.</p></div><div class='modal-section'><strong>Décision exécutive</strong><p>Prioriser actions de recouvrement ciblées.</p></div><div class='modal-section'><strong>Plan d'action</strong><p>Lancer relance prioritaire; contact commercial direct; examiner conditions de paiement.</p></div>">⚠
+                      +10j</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="c-row">
+                      <div class="c-av" style="background:linear-gradient(135deg,#C8442F,#E59500);">EC</div>ECOBANK Core
+                      Upgrade
+                    </div>
+                  </td>
+                  <td style="color:var(--red);font-weight:700;">56 j</td>
+                  <td style="font-weight:600;">64M</td>
+                  <td><span class="badge b-ko clickable" style="cursor:pointer;"
+                      data-title="ECOBANK Core Upgrade — Advisory"
+                      data-message="<div class='modal-section'><strong>Observation</strong><p>DSO critique à 56 jours; risque financier élevé.</p></div><div class='modal-section'><strong>Décision exécutive</strong><p>Activer procédure de relance renforcée et évaluer pénalités.</p></div><div class='modal-section'><strong>Plan d'action</strong><p>Appel du responsable commercial; plan de paiement; escalade au comité crédit si non réponse 7j.</p></div>">✗
+                      Relance</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="c-row">
+                      <div class="c-av" style="background:linear-gradient(135deg,#3D2816,#C8742F);">OR</div>ORANGE
+                      Sénégal
+                    </div>
+                  </td>
+                  <td style="color:var(--green);font-weight:700;">0 j</td>
+                  <td style="font-weight:600;">0M</td>
+                  <td><span class="badge b-ok clickable" style="cursor:pointer;" data-title="ORANGE Sénégal — Advisory"
+                      data-message="<div class='modal-section'><strong>Observation</strong><p>Pas d'encours; prélèvement automatique en place.</p></div><div class='modal-section'><strong>Décision exécutive</strong><p>Poursuivre suivi standard.</p></div><div class='modal-section'><strong>Plan d'action</strong><p>Vérifier cycles de facturation trimestriels; opportunité d'upsell.</p></div>">✓
+                      Prélèvt.</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+     ONGLET 4 — TALENTS
+══════════════════════════════════════════ -->
+    <div class="tab-panel" id="tab-talents">
+      <div class="page">
+
+        <div class="section-lbl">Analyse de la Capacité Opérationnelle & Gestion RH</div>
+
+        <div class="kpi-row-2" style="max-width:700px;">
+
+          <a href="rapport-turnover-v2.html" style="text-decoration:none;color:inherit;">
+            <div class="kpi-card" style="cursor:pointer;">
+              <div class="kpi-ic" style="background:var(--red-lt);">🔄</div>
+              <div class="kpi-lbl">Turnover Talents Critiques IT 📋</div>
+              <div class="kpi-val">9,2 %</div>
+
+              <div style="margin-top:12px;font-size:11.5px;color:var(--text-3);font-weight:500;">Architectes · Experts
+                Cloud · Data Engineers</div>
+              <div class="kpi-bar" style="background:var(--red);"></div>
+            </div>
+          </a>
+
+          <div class="kpi-card">
+            <div class="kpi-ic" style="background:var(--green-lt);">⏱️</div>
+            <div class="kpi-lbl">Time-to-Staff Projet</div>
+            <div class="kpi-val">11 j</div>
+
+            <div style="margin-top:12px;font-size:11.5px;color:var(--text-3);font-weight:500;">Signature → Staffing
+              effectif</div>
+            <div class="kpi-bar" style="background:var(--green);"></div>
+          </div>
+
+        </div>
+
+        <div class="charts-2col">
+
+          <div class="chart-card">
+            <div class="chart-hd">
+              <div>
+                <div class="chart-title">Turnover Talents IT — Tendance</div>
+                <div class="chart-sub">Trimestres 2025 → T1 2026</div>
+              </div>
+            </div>
+            <svg width="100%" height="180" viewBox="0 0 420 180" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <linearGradient id="gTurn" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#C8442F" stop-opacity=".14" />
+                  <stop offset="100%" stop-color="#C8442F" stop-opacity="0" />
+                </linearGradient>
+              </defs>
+              <line x1="40" y1="22" x2="400" y2="22" stroke="#E5DDD2" stroke-width="1" />
+              <line x1="40" y1="62" x2="400" y2="62" stroke="#E5DDD2" stroke-width="1" />
+              <line x1="40" y1="102" x2="400" y2="102" stroke="#E5DDD2" stroke-width="1" />
+              <line x1="40" y1="142" x2="400" y2="142" stroke="#E5DDD2" stroke-width="1" />
+              <text x="34" y="25" text-anchor="end" font-size="9" fill="#9B8B75">12%</text>
+              <text x="34" y="65" text-anchor="end" font-size="9" fill="#9B8B75">9%</text>
+              <text x="34" y="105" text-anchor="end" font-size="9" fill="#9B8B75">6%</text>
+              <text x="34" y="145" text-anchor="end" font-size="9" fill="#9B8B75">3%</text>
+              <line x1="40" y1="76" x2="400" y2="76" stroke="#E59500" stroke-width="1.8" stroke-dasharray="5 3" />
+              <text x="402" y="79" font-size="9" fill="#E59500">Obj.8%</text>
+              <polygon points="40,82 130,92 220,70 310,86 400,78 400,160 40,160" fill="url(#gTurn)" />
+              <polyline points="40,82 130,92 220,70 310,86 400,78" fill="none" stroke="#C8442F" stroke-width="3"
+                stroke-linejoin="round" stroke-linecap="round" />
+              <circle cx="40" cy="82" r="4" fill="#C8442F" />
+              <circle cx="130" cy="92" r="4" fill="#C8442F" />
+              <circle cx="220" cy="70" r="4" fill="#C8442F" />
+              <circle cx="310" cy="86" r="4" fill="#C8442F" />
+              <circle cx="400" cy="78" r="5" fill="#C8442F" stroke="#fff" stroke-width="2.5" />
+              <text x="400" y="68" text-anchor="middle" font-size="12" fill="#C8442F" font-weight="700">9,2%</text>
+              <text x="40" y="167" text-anchor="middle" font-size="9" fill="#9B8B75">T1 25</text>
+              <text x="130" y="167" text-anchor="middle" font-size="9" fill="#9B8B75">T2 25</text>
+              <text x="220" y="167" text-anchor="middle" font-size="9" fill="#9B8B75">T3 25</text>
+              <text x="310" y="167" text-anchor="middle" font-size="9" fill="#9B8B75">T4 25</text>
+              <text x="400" y="167" text-anchor="middle" font-size="10" fill="#C8442F" font-weight="700">T1 26</text>
+            </svg>
+            <div class="legend">
+              <div class="leg-item">
+                <div class="leg-dot" style="background:#C8442F"></div>Turnover réel
+              </div>
+              <div class="leg-item">
+                <div class="leg-dot" style="background:#E59500"></div>Objectif max 8%
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-hd">
+              <div>
+                <div class="chart-title">Time-to-Staff par Profil</div>
+                <div class="chart-sub">Délai staffing — marché Dakar</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:13px;padding-top:6px;">
+              <div class="prog-row">
+                <div class="prog-lbl">Architectes SI</div>
+                <div class="prog-track">
+                  <div class="prog-fill" style="width:87%;background:var(--red);"></div>
+                </div>
+                <div class="prog-val" style="color:var(--red);">13 j</div>
+              </div>
+              <div class="prog-row">
+                <div class="prog-lbl">Experts Cloud</div>
+                <div class="prog-track">
+                  <div class="prog-fill" style="width:80%;background:var(--amber);"></div>
+                </div>
+                <div class="prog-val" style="color:var(--amber);">12 j</div>
+              </div>
+              <div class="prog-row">
+                <div class="prog-lbl">Dev Fullstack</div>
+                <div class="prog-track">
+                  <div class="prog-fill" style="width:60%;background:var(--green);"></div>
+                </div>
+                <div class="prog-val" style="color:var(--green);">9 j</div>
+              </div>
+              <div class="prog-row">
+                <div class="prog-lbl">Chefs de Projet</div>
+                <div class="prog-track">
+                  <div class="prog-fill" style="width:47%;background:var(--green);"></div>
+                </div>
+                <div class="prog-val" style="color:var(--green);">7 j</div>
+              </div>
+              <div class="prog-row">
+                <div class="prog-lbl">Consult. Fonct.</div>
+                <div class="prog-track">
+                  <div class="prog-fill" style="width:33%;background:var(--green);"></div>
+                </div>
+                <div class="prog-val" style="color:var(--green);">5 j</div>
+              </div>
+              <div
+                style="padding:12px 14px;border-radius:10px;background:var(--amber-lt);border-left:4px solid var(--amber);font-size:12px;color:var(--amber);font-weight:700;margin-top:6px;">
+                ⚠ Architectes SI : délai à surveiller (13j · obj. &lt;15j)
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      <span style="font-weight:600;">⚠ Prototype — Données fictives adaptées au contexte UEMOA</span>
+      <strong style="color:var(--text-2);">BAAMTU · GDA Finance Advisory — Dashboard CEO/CFO · v5.1 · Mars 2026 · Dakar,
+        Sénégal</strong>
+      <span style="font-style:italic;">Pour usage interne uniquement</span>
+    </footer>
+
+    <script>
+      // ═══════════════════════════════════════════════════════════
+      // BASE DE DONNÉES — Données par pays/client/projet
+      // ═══════════════════════════════════════════════════════════
+      const dataDB = {
+        'tous': {
+          ca: '786M', caImg: '786M', caObj: '+9%',
+          caYTD: '93', caYTDTrend: '⚠ Objectif 100%', caYTDType: 't-warn',
+          marge: '354M', margeTrend: '45% du CA',
+          ebitda: '328M', ebitdaTrend: '▲ +13% vs M-1', ebitdaType: 't-up',
+          tresorerie: '78', tresorerieTrend: '= stable', tresorerieType: 't-flat',
+          carnet: '7,4 m', carnetTrend: '✓ Objectif ≥ 6 mois', carnetType: 't-up'
+        },
+        'senegal': {
+          ca: '520M', caImg: '520M', caObj: '+12% vs objectif',
+          caYTD: '91', caYTDTrend: '⚠ Objectif 100%', caYTDType: 't-warn',
+          marge: '235M', margeTrend: '45.2% du CA',
+          ebitda: '218M', ebitdaTrend: '▲ +15% vs M-1', ebitdaType: 't-up',
+          tresorerie: '82', tresorerieTrend: '▲ +4 pts', tresorerieType: 't-up',
+          carnet: '6.8 m', carnetTrend: '✓ OK', carnetType: 't-up'
+        },
+        'mali': {
+          ca: '156M', caImg: '156M', caObj: '+5% vs objectif',
+          caYTD: '88', caYTDTrend: '⚠ Objectif 100%', caYTDType: 't-warn',
+          marge: '70M', margeTrend: '44.9% du CA',
+          ebitda: '62M', ebitdaTrend: '▲ +8% vs M-1', ebitdaType: 't-up',
+          tresorerie: '75', tresorerieTrend: '= stable', tresorerieType: 't-flat',
+          carnet: '5.2 m', carnetTrend: '⚠ Alert', carnetType: 't-warn'
+        },
+        'burkina': {
+          ca: '110M', caImg: '110M', caObj: '+3% vs objectif',
+          caYTD: '97', caYTDTrend: '✓ OK', caYTDType: 't-up',
+          marge: '49M', margeTrend: '44.5% du CA',
+          ebitda: '48M', ebitdaTrend: '▲ +10% vs M-1', ebitdaType: 't-up',
+          tresorerie: '76', tresorerieTrend: '= stable', tresorerieType: 't-flat',
+          carnet: '8.1 m', carnetTrend: '✓ Excellent', carnetType: 't-up'
+        },
+        'cote-ivoire': {
+          ca: '90M', caImg: '90M', caObj: '-2% vs objectif',
+          caYTD: '94', caYTDTrend: '⚠ Objectif 100%', caYTDType: 't-warn',
+          marge: '40M', margeTrend: '44.4% du CA',
+          ebitda: '38M', ebitdaTrend: '▲ +11% vs M-1', ebitdaType: 't-up',
+          tresorerie: '71', tresorerieTrend: '▼ -3 pts', tresorerieType: 't-warn',
+          carnet: '4.8 m', carnetTrend: '⚠ Alert', carnetType: 't-warn'
+        },
+        'benin': {
+          ca: '30M', caImg: '30M', caObj: '+1% vs objectif',
+          caYTD: '92', caYTDTrend: '⚠ Objectif 100%', caYTDType: 't-warn',
+          marge: '13.5M', margeTrend: '45% du CA',
+          ebitda: '12M', ebitdaTrend: '▲ +9% vs M-1', ebitdaType: 't-up',
+          tresorerie: '80', tresorerieTrend: '= stable', tresorerieType: 't-flat',
+          carnet: '6.5 m', carnetTrend: '✓ OK', carnetType: 't-up'
+        }
+      };
+
+      // Données par client
+      const clientDB = {
+        'tous': dataDB['tous'],
+        'ecobank': {
+          ca: '245M', caImg: '245M', caObj: '+14% vs objectif',
+          caYTD: '95', caYTDTrend: '✓ OK', caYTDType: 't-up',
+          marge: '110M', margeTrend: '45% du CA',
+          ebitda: '102M', ebitdaTrend: '▲ +16% vs M-1', ebitdaType: 't-up',
+          tresorerie: '85', tresorerieTrend: '▲ Excellent', tresorerieType: 't-up',
+          carnet: '8.2 m', carnetTrend: '✓ Excellent', carnetType: 't-up'
+        },
+        'sonatel': {
+          ca: '218M', caImg: '218M', caObj: '+8% vs objectif',
+          caYTD: '92', caYTDTrend: '⚠ Objectif 100%', caYTDType: 't-warn',
+          marge: '98M', margeTrend: '45% du CA',
+          ebitda: '88M', ebitdaTrend: '▲ +12% vs M-1', ebitdaType: 't-up',
+          tresorerie: '76', tresorerieTrend: '= stable', tresorerieType: 't-flat',
+          carnet: '7.0 m', carnetTrend: '✓ OK', carnetType: 't-up'
+        },
+        'dgid': {
+          ca: '156M', caImg: '156M', caObj: '+7% vs objectif',
+          caYTD: '90', caYTDTrend: '⚠ Objectif 100%', caYTDType: 't-warn',
+          marge: '70M', margeTrend: '45% du CA',
+          ebitda: '62M', ebitdaTrend: '▲ +10% vs M-1', ebitdaType: 't-up',
+          tresorerie: '72', tresorerieTrend: '⚠ -8 pts', tresorerieType: 't-warn',
+          carnet: '6.8 m', carnetTrend: '✓ OK', carnetType: 't-up'
+        },
+        'bhs': {
+          ca: '87M', caImg: '87M', caObj: '+2% vs objectif',
+          caYTD: '89', caYTDTrend: '⚠ Objectif 100%', caYTDType: 't-warn',
+          marge: '39M', margeTrend: '45% du CA',
+          ebitda: '35M', ebitdaTrend: '▲ +9% vs M-1', ebitdaType: 't-up',
+          tresorerie: '75', tresorerieTrend: '= stable', tresorerieType: 't-flat',
+          carnet: '6.5 m', carnetTrend: '✓ OK', carnetType: 't-up'
+        },
+        'orange': {
+          ca: '80M', caImg: '80M', caObj: '+4% vs objectif',
+          caYTD: '91', caYTDTrend: '⚠ Objectif 100%', caYTDType: 't-warn',
+          marge: '36M', margeTrend: '45% du CA',
+          ebitda: '32M', ebitdaTrend: '▲ +11% vs M-1', ebitdaType: 't-up',
+          tresorerie: '78', tresorerieTrend: '= stable', tresorerieType: 't-flat',
+          carnet: '7.0 m', carnetTrend: '✓ OK', carnetType: 't-up'
+        }
+      };
+
+      // Données des consultants (exemples)
+      const consultants = [
+        { name: 'Aïssatou Diop', unit: 'Data Science', project: 'SONATEL Phase 2', client: 'sonatel', pays: 'senegal', taux: 100, dispo: '2026-04-15', skills: 'Python, ML, SQL' },
+        { name: 'Mamadou Traoré', unit: 'Cloud & DevOps', project: 'ECOBANK Digital', client: 'ecobank', pays: 'senegal', taux: 80, dispo: '2026-03-30', skills: 'AWS, Terraform, CI/CD' },
+        { name: 'Fatou Cissé', unit: 'Développement Web', project: 'DGID Modernisation', client: 'dgid', pays: 'mali', taux: 60, dispo: '2026-05-10', skills: 'React, Node.js' },
+        { name: 'Jean Kaboré', unit: 'Architecture SI', project: 'ECOBANK Core Upgrade', client: 'ecobank', pays: 'burkina', taux: 50, dispo: '2026-02-28', skills: 'Enterprise Architect, UML' },
+        { name: 'Claude Zinsou', unit: 'Data Engineering', project: 'ORANGE Transformation', client: 'orange', pays: 'cote-ivoire', taux: 40, dispo: '2026-04-01', skills: 'Spark, ETL, Python' },
+        { name: 'Marie Koné', unit: 'Consult. Fonct.', project: '', client: '', pays: 'benin', taux: 20, dispo: '2026-03-05', skills: 'Business Analysis, BPM' }
+      ];
+
+      function updateUtilisationReport(filters) {
+        const tbody = document.getElementById('utilRows');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        const rows = consultants.filter(c => {
+          if (filters.filterClient && filters.filterClient !== '' && c.client !== filters.filterClient) return false;
+          if (filters.filterFiliale && filters.filterFiliale !== '' && c.filiale !== filters.filterFiliale) return false;
+          if (filters.filterProjet && filters.filterProjet !== '' && c.project !== filters.filterProjet) return false;
+          if (filters.filterDate && filters.filterDate !== '') {
+            // Afficher seulement si disponible avant ou à la date sélectionnée
+            const dFilt = new Date(filters.filterDate);
+            const dDispo = new Date(c.dispo);
+            if (isNaN(dDispo.getTime())) return true; // si pas de date dispo indiquée
+            if (dDispo > dFilt) return false;
+          }
+          return true;
+        });
+
+        if (rows.length === 0) {
+          const tr = document.createElement('tr');
+          tr.innerHTML = '<td colspan="6" style="padding:12px;color:var(--text-3);">Aucun consultant trouvé pour ces filtres.</td>';
+          tbody.appendChild(tr);
+          return;
+        }
+
+        rows.forEach(c => {
+          const tr = document.createElement('tr');
+          tr.style.borderBottom = '1px solid var(--border)';
+          tr.innerHTML = `
+      <td style="padding:10px 8px;">${c.name}</td>
+      <td style="padding:10px 8px;">${c.unit}</td>
+      <td style="padding:10px 8px;">${c.project || '-'}${c.client ? ' (' + c.client.toUpperCase() + ')' : ''}</td>
+      <td style="padding:10px 8px;">${c.taux} %</td>
+      <td style="padding:10px 8px;">${c.dispo || '-'}</td>
+      <td style="padding:10px 8px;">${c.skills}</td>
+    `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      function openUtilReport() {
+        // Activer l'onglet Delivery
+        const btn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.onclick && b.onclick.toString().includes("'delivery'"));
+        if (btn) {
+          switchTab('delivery', btn);
+        }
+
+        // Afficher le rapport et mettre à jour son contenu selon les filtres courants
+        const utilCard = document.getElementById('utilReportCard');
+        if (utilCard) utilCard.style.display = 'block';
+
+        const filterFiliale = document.getElementById('filterFiliale') ? document.getElementById('filterFiliale').value : ''; // replaced pays by filiale
+        const filterClient = document.getElementById('filterClient') ? document.getElementById('filterClient').value : '';
+        const filterProjet = document.getElementById('filterProjet') ? document.getElementById('filterProjet').value : '';
+        const filterDate = document.getElementById('dateFilterInput') ? document.getElementById('dateFilterInput').value : '';
+
+        updateUtilisationReport({ filterFiliale, filterClient, filterProjet, filterDate });
+
+        // Scroll vers le rapport
+        setTimeout(() => {
+          utilCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 120);
+      }
+
+      function applyFilters() {
+        const filterFiliale = document.getElementById('filterFiliale').value;
+        const filterClient = document.getElementById('filterClient').value;
+        const filterProjet = document.getElementById('filterProjet').value;
+        const filterDate = document.getElementById('dateFilterInput').value;
+
+        // Déterminer quelle base de données utiliser
+        let selectedData = null;
+        let filterLabel = '';
+
+        if (filterClient) {
+          selectedData = clientDB[filterClient];
+          filterLabel = `Filtre Client: ${filterClient}`;
+        } else if (filterFiliale) {
+          selectedData = dataDB[filterFiliale];
+          filterLabel = `Filtre Filiale: ${filterFiliale}`;
+        } else if (filterProjet) {
+          // Plans pour filtres de projet (à développer)
+          filterLabel = `Filtre Projet: ${filterProjet}`;
+          selectedData = dataDB['tous'];
+        } else {
+          selectedData = dataDB['tous'];
+          filterLabel = 'Toutes les filiales';
+        }
+
+        if (filterDate) {
+          filterLabel += ` | Date: ${filterDate}`;
+        }
+
+        // Mettre à jour les KPI cards (onglet Finance)
+        updateFinanceKPIs(selectedData);
+        // Mettre à jour le rapport Taux d'Utilisation (onglet Delivery)
+        updateUtilisationReport({ filterFiliale, filterClient, filterProjet, filterDate });
+
+        // Ajouter un message de filtre en console
+        console.log('Filtres appliqués:', filterLabel);
+      }
+
+      function updateFinanceKPIs(data) {
+        // Mise à jour CA
+        const caCard = document.querySelector('.kpi-val');
+        if (caCard && caCard.textContent === '786M') {
+          caCard.textContent = data.ca;
+        }
+
+        // Mise à jour CA YTD
+        const caYTDCards = document.querySelectorAll('.kpi-val.sm');
+        if (caYTDCards.length > 0 && caYTDCards[0].textContent === '93 %') {
+          caYTDCards[0].textContent = data.caYTD + ' %';
+        }
+
+        // Mise à jour Marge Brute
+        const margeCard = document.querySelectorAll('.kpi-val')[2];
+        if (margeCard && margeCard.textContent === '354M') {
+          margeCard.textContent = data.marge;
+        }
+
+        // Mise à jour EBITDA
+        const ebitdaCard = document.querySelectorAll('.kpi-val')[3];
+        if (ebitdaCard && ebitdaCard.textContent === '328M') {
+          ebitdaCard.textContent = data.ebitda;
+        }
+
+        // Mise à jour Trésorerie
+        const tresorerieCard = document.querySelectorAll('.kpi-val.sm')[1];
+        if (tresorerieCard && tresorerieCard.textContent === '78 %') {
+          tresorerieCard.textContent = data.tresorerie + ' %';
+        }
+
+        // Mise à jour Carnet
+        const carnetCard = document.querySelectorAll('.kpi-val.sm')[2];
+        if (carnetCard && carnetCard.textContent === '7,4 m') {
+          carnetCard.textContent = data.carnet;
+        }
+      }
+
+      function switchTab(id, btn) {
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('tab-' + id).classList.add('active');
+        btn.classList.add('active');
+        sessionStorage.setItem('activeTab', id);
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tabFromUrl = urlParams.get('tab');
+        const savedTab = sessionStorage.getItem('activeTab') || 'vue-globale';
+        const activeTab = tabFromUrl || savedTab;
+
+        sessionStorage.setItem('activeTab', activeTab);
+
+        // Remove active class from all tabs first
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+        // Activate the correct tab panel
+        const tabPanel = document.getElementById('tab-' + activeTab);
+        if (tabPanel) {
+          tabPanel.classList.add('active');
+        }
+
+        // Activate the correct tab button
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          if (btn.onclick && btn.onclick.toString().includes("'" + activeTab + "'")) {
+            btn.classList.add('active');
+          }
+        });
+
+        // Gestion du bouton "Tous"
+        const filterTous = document.getElementById('filterTous');
+        if (filterTous) {
+          filterTous.addEventListener('click', function () {
+            document.getElementById('filterFiliale').value = '';
+            document.getElementById('filterClient').value = '';
+            document.getElementById('filterProjet').value = '';
+            document.getElementById('dateFilterInput').value = '';
+            document.getElementById('dateFilterBtn').textContent = '📅 Sélectionner Date';
+            document.getElementById('dateFilterBtn').classList.remove('active');
+
+            // Réinitialiser les styles des selects
+            document.getElementById('filterFiliale').style.background = 'rgba(255,255,255,.08)';
+            document.getElementById('filterFiliale').style.borderColor = 'rgba(255,255,255,.2)';
+            document.getElementById('filterFiliale').style.color = 'rgba(255,255,255,.65)';
+            document.getElementById('filterClient').style.background = 'rgba(255,255,255,.08)';
+            document.getElementById('filterClient').style.borderColor = 'rgba(255,255,255,.2)';
+            document.getElementById('filterClient').style.color = 'rgba(255,255,255,.65)';
+            document.getElementById('filterProjet').style.background = 'rgba(255,255,255,.08)';
+            document.getElementById('filterProjet').style.borderColor = 'rgba(255,255,255,.2)';
+            document.getElementById('filterProjet').style.color = 'rgba(255,255,255,.65)';
+
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            applyFilters();
+          });
+        }
+
+        // Gestion des sélecteurs
+        const filterSelects = ['filterFiliale', 'filterClient', 'filterProjet'];
+        filterSelects.forEach(selectId => {
+          const select = document.getElementById(selectId);
+          if (select) {
+            select.addEventListener('change', function () {
+              if (filterTous) filterTous.classList.remove('active');
+              if (this.value) {
+                this.style.background = 'var(--baamtu-gold)';
+                this.style.borderColor = 'var(--baamtu-gold)';
+                this.style.color = 'var(--baamtu-dark)';
+              } else {
+                this.style.background = 'rgba(255,255,255,.08)';
+                this.style.borderColor = 'rgba(255,255,255,.2)';
+                this.style.color = 'rgba(255,255,255,.65)';
+              }
+              applyFilters();
+            });
+          }
+        });
+
+        // Gestion du filtre date
+        const dateFilterBtn = document.getElementById('dateFilterBtn');
+        const dateInput = document.getElementById('dateFilterInput');
+
+        if (dateFilterBtn) {
+          dateFilterBtn.addEventListener('click', function () {
+            dateInput.click();
+          });
+        }
+
+        if (dateInput) {
+          dateInput.addEventListener('change', function () {
+            if (this.value) {
+              if (dateFilterBtn) {
+                dateFilterBtn.classList.add('active');
+                const date = new Date(this.value);
+                const jour = date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                dateFilterBtn.textContent = '📅 ' + jour;
+                if (filterTous) filterTous.classList.remove('active');
+              }
+            } else {
+              if (dateFilterBtn) {
+                dateFilterBtn.classList.remove('active');
+                dateFilterBtn.textContent = '📅 Sélectionner Date';
+              }
+            }
+            applyFilters();
+          });
+        }
+        // Initial render des KPI et du rapport selon filtres par défaut
+        applyFilters();
+
+        // legacy action-btn handler removed; span.badge elements with data-message
+        // are now handled by the generic listener below (elements with [data-message]).
+        // Support elements SVG/text with data-message attribute (clickable bars/labels)
+        document.querySelectorAll('[data-message]').forEach(el => {
+          if (el.tagName.toLowerCase() === 'button') return; // already handled
+          el.addEventListener('click', () => {
+            const msg = el.getAttribute('data-message');
+            if (!msg) return;
+            // set optional title
+            const title = el.getAttribute('data-title');
+            if (title) {
+              const hdr = document.querySelector('#actionModal .modal-header h3');
+              if (hdr) hdr.textContent = title;
+            }
+            document.getElementById('modalText').innerHTML = msg;
+            document.getElementById('actionModal').style.display = 'flex';
+          });
+        });
+
+        // Écart Budget vs Réel : appliquer code couleur dynamique et pop-ups pour dépassements
+        document.querySelectorAll('.prog-row').forEach(row => {
+          try {
+            const valEl = row.querySelector('.prog-val');
+            if (!valEl) return;
+            const txt = valEl.textContent || '';
+            const m = txt.match(/([+\-]?\d+)%/);
+            if (!m) return;
+            const pct = Math.abs(parseInt(m[1], 10));
+            const fill = row.querySelector('.prog-fill');
+            if (!fill) return;
+
+            if (pct <= 5) {
+              fill.style.background = 'var(--green)';
+              valEl.style.color = 'var(--green)';
+            } else if (pct >= 6 && pct <= 10) {
+              fill.style.background = 'var(--amber)';
+              valEl.style.color = 'var(--amber)';
+            } else {
+              fill.style.background = 'var(--red)';
+              valEl.style.color = 'var(--red)';
+              // ajouter pop-up critique
+              const proj = row.querySelector('.prog-lbl') ? row.querySelector('.prog-lbl').textContent.trim() : 'Projet';
+              const msg = `<div class='modal-section'>\n    <strong>Observation</strong>\n    <p>Dépassement budgétaire de +${pct}%, au-delà du seuil de tolérance.</p>\n    </div>\n    <div class='modal-section'>\n    <strong>Décision exécutive</strong>\n    <p>Lancer audit budgétaire immédiat.</p>\n    </div>\n    <div class='modal-section'>\n    <strong>Plan d'action</strong>\n    <p>Revue des charges engagées<br>Validation PMO<br>Gel des dépenses non critiques<br>Escalade Direction si dérive persistante</p>\n    </div>`;
+              row.setAttribute('data-message', msg);
+              row.style.cursor = 'pointer';
+              row.addEventListener('click', () => {
+                document.getElementById('modalText').innerHTML = msg;
+                document.getElementById('actionModal').style.display = 'flex';
+              });
+            }
+          } catch (e) {
+            console.warn('prog-row parse error', e);
+          }
+        });
+        const modalClose = document.querySelector('#actionModal .modal-close');
+        if (modalClose) modalClose.addEventListener('click', () => {
+          document.getElementById('actionModal').style.display = 'none';
+        });
+        document.getElementById('actionModal').addEventListener('click', e => {
+          if (e.target.id === 'actionModal') document.getElementById('actionModal').style.display = 'none';
+        });
+
+      });
+    </script>
+
+    <!-- modal container -->
+    <div id="actionModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Plan d'Action Exécutif</h3>
+          <img src="logo.png" alt="BAAMTU" class="modal-logo">
+          <span class="modal-close">&times;</span>
+        </div>
+        <div class="modal-body" id="modalText"></div>
+      </div>
+    </div>
+</body>
+
+</html>
